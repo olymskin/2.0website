@@ -1,0 +1,91 @@
+Update ONLY this file:
+artifacts/olym/src/components/ProductExperience.tsx
+
+Goal:
+Replace the current generic cylinder jar with a much closer 3D approximation of my OLYM SKIN jar using the existing React Three Fiber setup. Do NOT use a GLB model. Do NOT replace the section with images. Keep it real-time 3D built from geometry.
+
+Important:
+- Modify only the JarProduct() function and any imports/material helpers needed for that function.
+- Keep Canvas, ProductScene, OrbitControls, lighting, Environment, WebGL fallback, text overlay, layout, and section styling unchanged.
+- Keep auto-rotation and floating motion.
+- Keep drag-to-rotate behavior.
+
+Jar design to match:
+- Low, wide, luxury body cream jar
+- Deep translucent cherry/wine red glass body
+- Heavy rounded base
+- Slight inward taper toward the top/neck
+- Thick brushed metallic champagne-gold lid
+- Thin dark shadow gap under the lid
+- Thin gold rim/detail near the base
+- Gold “OLYM” text on the front in spaced letters
+- Smaller gold “BODY CREAM” below it
+- Smaller gold “200 ML e 6.7 FL OZ” below that
+- Circular O/M emblem on top of the lid
+- Premium glossy highlights on the glass
+
+Use this approximate geometry/proportion system:
+- Main glass body: short and wide, not tall
+  Cylinder args around [0.95, 1.15, 0.65, 96], position [0, -0.15, 0]
+- Lower heavy glass bulge/base:
+  Cylinder args around [1.2, 1.25, 0.25, 96], position [0, -0.45, 0]
+- Upper shoulder/neck taper:
+  Cylinder args around [0.9, 0.95, 0.25, 96], position [0, 0.2, 0]
+- Gold lid:
+  Cylinder args around [1.05, 1.05, 0.28, 96], position [0, 0.6, 0]
+- Thin dark gap under lid:
+  Cylinder args around [1.04, 1.04, 0.035, 96], position [0, 0.43, 0], material near-black
+- Thin gold base rim:
+  Cylinder args around [1.18, 1.18, 0.035, 96], position [0, -0.58, 0]
+- Top lid inset/emblem area:
+  Use thin torus/cylinder/text geometry if available, centered on top of the lid.
+
+Materials:
+- Glass body: deep cherry/wine red, transparent/translucent, glossy
+  Suggested values:
+  color #5E0B14 or #6E0F1A
+  transparent true
+  opacity around 0.78-0.9
+  metalness 0.1-0.2
+  roughness 0.12-0.25
+  transmission if supported
+  envMapIntensity around 1.8-2.2
+
+- Lid: brushed champagne gold
+  color #C6A46A or #D1AD6F
+  metalness 0.85-0.95
+  roughness 0.18-0.28
+  envMapIntensity around 2
+
+- Text/logo: soft gold
+  color #E8D19A or #F1DCA8
+
+Add premium highlights:
+- Add 1-2 subtle translucent vertical highlight planes/curved strips on the front-left/front-right of the jar body, parented to the jar group so they rotate with it.
+- Highlights should be soft white/gold, low opacity, not harsh.
+
+Add front labeling:
+- Use Text from @react-three/drei if available.
+- Add OLYM text on the front face, positioned slightly in front of the jar surface, around y -0.05.
+- Add BODY CREAM below, around y -0.23.
+- Add 200 ML e 6.7 FL OZ below, around y -0.38.
+- Use gold material.
+- Keep text small and elegant.
+- Make sure text is visible from the front and rotates with the jar.
+
+Add lid emblem:
+- Add a subtle circular O/M emblem on top of the gold lid.
+- It can be made with thin Torus geometry plus simple Text reading “O | M” or “OM”.
+- Position on top of lid around y 0.77.
+- Rotate flat onto lid surface.
+- Use slightly darker/lighter gold for embossed effect.
+
+Do not:
+- Do not redesign the whole ProductExperience section.
+- Do not remove the WebGL fallback.
+- Do not change the page layout.
+- Do not replace the jar with a flat image.
+- Do not create or require a GLB file.
+- Do not touch unrelated files.
+
+After editing, check for TypeScript errors and fix any import issues.

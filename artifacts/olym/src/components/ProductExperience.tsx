@@ -1,6 +1,6 @@
-import { Suspense, useRef, Component, ErrorInfo, ReactNode } from "react";
+import { Suspense, useRef, useMemo, Component, ErrorInfo, ReactNode } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Cylinder } from "@react-three/drei";
+import { OrbitControls, Environment, Cylinder, Text } from "@react-three/drei";
 import * as THREE from "three";
 
 interface ErrorBoundaryState {
@@ -36,34 +36,181 @@ function JarProduct() {
     }
   });
 
-  const jarMaterial = new THREE.MeshStandardMaterial({
-    color: "#1a0a0c",
-    metalness: 0.35,
-    roughness: 0.35,
-    envMapIntensity: 1.4,
-  });
+  // ── Materials ──────────────────────────────────────────────────────────────
+  const glassMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#6E0F1A",
+        transparent: true,
+        opacity: 0.88,
+        metalness: 0.15,
+        roughness: 0.16,
+        envMapIntensity: 2.1,
+        side: THREE.DoubleSide,
+      }),
+    []
+  );
 
-  const lidMaterial = new THREE.MeshStandardMaterial({
-    color: "#2a1010",
-    metalness: 0.55,
-    roughness: 0.25,
-    envMapIntensity: 1.6,
-  });
+  const lidMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#C6A46A",
+        metalness: 0.92,
+        roughness: 0.2,
+        envMapIntensity: 2.2,
+      }),
+    []
+  );
 
-  const ringMaterial = new THREE.MeshStandardMaterial({
-    color: "#C6A46A",
-    metalness: 0.85,
-    roughness: 0.15,
-    envMapIntensity: 2.0,
-  });
+  const gapMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#060304",
+        metalness: 0.05,
+        roughness: 0.95,
+      }),
+    []
+  );
+
+  const emblemMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#A8863A",
+        metalness: 0.88,
+        roughness: 0.28,
+        envMapIntensity: 1.8,
+      }),
+    []
+  );
+
+  const highlightMat = useMemo(
+    () =>
+      new THREE.MeshBasicMaterial({
+        color: "#ffffff",
+        transparent: true,
+        opacity: 0.055,
+        side: THREE.DoubleSide,
+        depthWrite: false,
+      }),
+    []
+  );
 
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      <Cylinder args={[0.85, 0.78, 1.1, 64]} material={jarMaterial} position={[0, 0, 0]} />
-      <Cylinder args={[0.88, 0.88, 0.22, 64]} material={lidMaterial} position={[0, 0.66, 0]} />
-      <Cylinder args={[0.9, 0.9, 0.04, 64]} material={ringMaterial} position={[0, 0.55, 0]} />
-      <Cylinder args={[0.82, 0.82, 0.04, 64]} material={ringMaterial} position={[0, -0.57, 0]} />
-      <Cylinder args={[0.6, 0.6, 0.06, 64]} material={ringMaterial} position={[0, 0.78, 0]} />
+
+      {/* ── Glass body — main wide cylinder ── */}
+      <Cylinder args={[0.95, 1.15, 0.65, 96]} material={glassMat} position={[0, -0.15, 0]} />
+
+      {/* ── Heavy rounded base bulge ── */}
+      <Cylinder args={[1.2, 1.25, 0.25, 96]} material={glassMat} position={[0, -0.45, 0]} />
+
+      {/* ── Upper shoulder / neck taper ── */}
+      <Cylinder args={[0.9, 0.95, 0.25, 96]} material={glassMat} position={[0, 0.2, 0]} />
+
+      {/* ── Lid ── */}
+      <Cylinder args={[1.05, 1.05, 0.28, 96]} material={lidMat} position={[0, 0.6, 0]} />
+
+      {/* ── Lid top cap face ── */}
+      <mesh position={[0, 0.745, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.05, 96]} />
+        <meshStandardMaterial
+          color="#C6A46A"
+          metalness={0.92}
+          roughness={0.2}
+          envMapIntensity={2.2}
+        />
+      </mesh>
+
+      {/* ── Dark shadow gap between lid and body ── */}
+      <Cylinder args={[1.04, 1.04, 0.035, 96]} material={gapMat} position={[0, 0.43, 0]} />
+
+      {/* ── Gold base rim ── */}
+      <Cylinder args={[1.18, 1.18, 0.035, 96]} material={lidMat} position={[0, -0.585, 0]} />
+
+      {/* ── Lid emblem: outer torus ring ── */}
+      <mesh position={[0, 0.748, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.4, 0.016, 16, 96]} />
+        <meshStandardMaterial
+          color="#A8863A"
+          metalness={0.88}
+          roughness={0.28}
+          envMapIntensity={1.8}
+        />
+      </mesh>
+
+      {/* ── Lid emblem: inner torus ring ── */}
+      <mesh position={[0, 0.748, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.24, 0.012, 16, 96]} />
+        <meshStandardMaterial
+          color="#A8863A"
+          metalness={0.88}
+          roughness={0.28}
+          envMapIntensity={1.8}
+        />
+      </mesh>
+
+      {/* ── Lid emblem: "O | M" text (flat on lid top) ── */}
+      <Text
+        position={[0, 0.758, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+        fontSize={0.1}
+        letterSpacing={0.14}
+        color="#A8863A"
+        anchorX="center"
+        anchorY="middle"
+      >
+        O | M
+      </Text>
+
+      {/* ── Front label: OLYM ── */}
+      <Text
+        position={[0, -0.04, 1.18]}
+        fontSize={0.145}
+        letterSpacing={0.3}
+        color="#E8D19A"
+        anchorX="center"
+        anchorY="middle"
+        material={emblemMat}
+      >
+        OLYM
+      </Text>
+
+      {/* ── Front label: BODY CREAM ── */}
+      <Text
+        position={[0, -0.23, 1.165]}
+        fontSize={0.063}
+        letterSpacing={0.18}
+        color="#D4B87E"
+        anchorX="center"
+        anchorY="middle"
+      >
+        BODY CREAM
+      </Text>
+
+      {/* ── Front label: 200 ML / fl oz ── */}
+      <Text
+        position={[0, -0.36, 1.15]}
+        fontSize={0.048}
+        letterSpacing={0.1}
+        color="#C4A86E"
+        anchorX="center"
+        anchorY="middle"
+      >
+        {"200 ML  e  6.7 FL OZ"}
+      </Text>
+
+      {/* ── Specular highlight strip — front left ── */}
+      <mesh position={[-0.52, 0.0, 1.08]} rotation={[0, Math.PI * 0.14, 0]}>
+        <planeGeometry args={[0.055, 0.72]} />
+        <primitive object={highlightMat} attach="material" />
+      </mesh>
+
+      {/* ── Specular highlight strip — front right ── */}
+      <mesh position={[0.52, 0.0, 1.08]} rotation={[0, -Math.PI * 0.14, 0]}>
+        <planeGeometry args={[0.055, 0.72]} />
+        <primitive object={highlightMat} attach="material" />
+      </mesh>
+
     </group>
   );
 }
@@ -105,14 +252,13 @@ function StaticJarFallback() {
         justifyContent: "center",
       }}
     >
-      {/* CSS jar silhouette fallback */}
       <div
         style={{
-          width: "120px",
-          height: "130px",
+          width: "140px",
+          height: "100px",
           background:
-            "linear-gradient(135deg, #2a1010 0%, #1a0a0c 60%, #3B0A0F 100%)",
-          borderRadius: "12px 12px 16px 16px",
+            "linear-gradient(135deg, #4a0810 0%, #2a0508 60%, #3B0A0F 100%)",
+          borderRadius: "8px 8px 14px 14px",
           border: "1px solid rgba(198,164,106,0.3)",
           position: "relative",
           boxShadow:
@@ -123,27 +269,45 @@ function StaticJarFallback() {
         <div
           style={{
             position: "absolute",
-            top: "-22px",
-            left: "-4px",
-            right: "-4px",
-            height: "26px",
+            top: "-24px",
+            left: "-5px",
+            right: "-5px",
+            height: "28px",
             background:
-              "linear-gradient(135deg, #3a2010 0%, #2a1810 100%)",
-            borderRadius: "10px 10px 4px 4px",
-            border: "1px solid rgba(198,164,106,0.4)",
+              "linear-gradient(135deg, #D1AD6F 0%, #C6A46A 50%, #A8863A 100%)",
+            borderRadius: "6px 6px 2px 2px",
+            border: "1px solid rgba(198,164,106,0.5)",
           }}
         />
-        {/* Gold ring */}
+        {/* Gold base rim */}
         <div
           style={{
             position: "absolute",
-            bottom: "8px",
-            left: "0",
-            right: "0",
-            height: "1px",
-            background: "rgba(198,164,106,0.5)",
+            bottom: "-4px",
+            left: "-5px",
+            right: "-5px",
+            height: "4px",
+            background: "#C6A46A",
+            borderRadius: "0 0 14px 14px",
+            opacity: 0.8,
           }}
         />
+        {/* Label text */}
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontSize: "0.75rem",
+            letterSpacing: "0.3em",
+            color: "#E8D19A",
+            textAlign: "center",
+          }}
+        >
+          OLYM
+        </div>
       </div>
     </div>
   );
