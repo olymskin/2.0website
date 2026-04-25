@@ -37,148 +37,164 @@ function JarProduct() {
   });
 
   // ── Materials ──────────────────────────────────────────────────────────────
+
+  // Opaque deep ruby/cherry wine glass — glossy, dense, solid
   const glassMat = useMemo(
     () =>
       new THREE.MeshStandardMaterial({
-        color: "#6E0F1A",
-        transparent: true,
-        opacity: 0.88,
-        metalness: 0.15,
+        color: "#5A0A14",
+        metalness: 0.06,
         roughness: 0.16,
-        envMapIntensity: 2.1,
-        side: THREE.DoubleSide,
-      }),
-    []
-  );
-
-  const lidMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#C6A46A",
-        metalness: 0.92,
-        roughness: 0.2,
-        envMapIntensity: 2.2,
-      }),
-    []
-  );
-
-  const gapMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#060304",
-        metalness: 0.05,
-        roughness: 0.95,
-      }),
-    []
-  );
-
-  const emblemMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#A8863A",
-        metalness: 0.88,
-        roughness: 0.28,
         envMapIntensity: 1.8,
       }),
     []
   );
 
+  // Darker, denser lower base — heavier glass feel
+  const baseMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#3D0008",
+        metalness: 0.08,
+        roughness: 0.2,
+        envMapIntensity: 1.6,
+      }),
+    []
+  );
+
+  // Brushed champagne gold lid
+  const lidMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#D1AD6F",
+        metalness: 0.95,
+        roughness: 0.22,
+        envMapIntensity: 2.0,
+      }),
+    []
+  );
+
+  // Near-black shadow gap ring between lid and body
+  const gapMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#050203",
+        metalness: 0.02,
+        roughness: 0.98,
+      }),
+    []
+  );
+
+  // Darker embossed gold for emblem detail
+  const emblemMat = useMemo(
+    () =>
+      new THREE.MeshStandardMaterial({
+        color: "#9A7830",
+        metalness: 0.9,
+        roughness: 0.3,
+        envMapIntensity: 1.6,
+      }),
+    []
+  );
+
+  // Very subtle specular edge highlights — nearly invisible
   const highlightMat = useMemo(
     () =>
       new THREE.MeshBasicMaterial({
         color: "#ffffff",
         transparent: true,
-        opacity: 0.055,
+        opacity: 0.04,
         side: THREE.DoubleSide,
         depthWrite: false,
       }),
     []
   );
 
+  // ── Geometry stack (bottom → top) ─────────────────────────────────────────
+  //   bottom cap disc       y = -0.60
+  //   heavy base bulge      center y = -0.43, h = 0.32   top at -0.27
+  //   main body             center y = -0.09, h = 0.64   top at  0.23
+  //   upper shoulder taper  center y =  0.32, h = 0.20   top at  0.42
+  //   shadow gap            center y =  0.435, h = 0.022
+  //   gold lid              center y =  0.558, h = 0.24  top at  0.678
+  //   lid top cap disc      y =  0.680
+
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
 
-      {/* ── Glass body — main wide cylinder ── */}
-      <Cylinder args={[0.95, 1.15, 0.65, 96]} material={glassMat} position={[0, -0.15, 0]} />
+      {/* ── Bottom face cap — seals the base ── */}
+      <mesh position={[0, -0.60, 0]} rotation={[Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.26, 96]} />
+        <meshStandardMaterial color="#280005" metalness={0.1} roughness={0.35} />
+      </mesh>
 
       {/* ── Heavy rounded base bulge ── */}
-      <Cylinder args={[1.2, 1.25, 0.25, 96]} material={glassMat} position={[0, -0.45, 0]} />
+      <Cylinder args={[1.22, 1.26, 0.32, 96]} material={baseMat} position={[0, -0.43, 0]} />
 
-      {/* ── Upper shoulder / neck taper ── */}
-      <Cylinder args={[0.9, 0.95, 0.25, 96]} material={glassMat} position={[0, 0.2, 0]} />
+      {/* ── Main wide glass body ── */}
+      <Cylinder args={[1.0, 1.22, 0.64, 96]} material={glassMat} position={[0, -0.09, 0]} />
 
-      {/* ── Lid ── */}
-      <Cylinder args={[1.05, 1.05, 0.28, 96]} material={lidMat} position={[0, 0.6, 0]} />
+      {/* ── Upper shoulder — inward taper toward lid ── */}
+      <Cylinder args={[0.86, 1.0, 0.20, 96]} material={glassMat} position={[0, 0.32, 0]} />
 
-      {/* ── Lid top cap face ── */}
-      <mesh position={[0, 0.745, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.05, 96]} />
+      {/* ── Thin black shadow gap between body and lid ── */}
+      <Cylinder args={[0.98, 0.98, 0.022, 96]} material={gapMat} position={[0, 0.435, 0]} />
+
+      {/* ── Gold lid — sits flush directly above gap ── */}
+      <Cylinder args={[1.02, 1.02, 0.24, 96]} material={lidMat} position={[0, 0.558, 0]} />
+
+      {/* ── Lid top face cap ── */}
+      <mesh position={[0, 0.679, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <circleGeometry args={[1.02, 96]} />
         <meshStandardMaterial
-          color="#C6A46A"
-          metalness={0.92}
-          roughness={0.2}
-          envMapIntensity={2.2}
+          color="#D1AD6F"
+          metalness={0.95}
+          roughness={0.22}
+          envMapIntensity={2.0}
         />
       </mesh>
 
-      {/* ── Dark shadow gap between lid and body ── */}
-      <Cylinder args={[1.04, 1.04, 0.035, 96]} material={gapMat} position={[0, 0.43, 0]} />
-
-      {/* ── Gold base rim ── */}
-      <Cylinder args={[1.18, 1.18, 0.035, 96]} material={lidMat} position={[0, -0.585, 0]} />
-
       {/* ── Lid emblem: outer torus ring ── */}
-      <mesh position={[0, 0.748, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.4, 0.016, 16, 96]} />
-        <meshStandardMaterial
-          color="#A8863A"
-          metalness={0.88}
-          roughness={0.28}
-          envMapIntensity={1.8}
-        />
+      <mesh position={[0, 0.682, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.38, 0.013, 16, 96]} />
+        <primitive object={emblemMat} attach="material" />
       </mesh>
 
       {/* ── Lid emblem: inner torus ring ── */}
-      <mesh position={[0, 0.748, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.24, 0.012, 16, 96]} />
-        <meshStandardMaterial
-          color="#A8863A"
-          metalness={0.88}
-          roughness={0.28}
-          envMapIntensity={1.8}
-        />
+      <mesh position={[0, 0.682, 0]} rotation={[-Math.PI / 2, 0, 0]}>
+        <torusGeometry args={[0.22, 0.009, 16, 96]} />
+        <primitive object={emblemMat} attach="material" />
       </mesh>
 
-      {/* ── Lid emblem: "O | M" text (flat on lid top) ── */}
+      {/* ── Lid emblem: "O | M" flat on lid top ── */}
       <Text
-        position={[0, 0.758, 0]}
+        position={[0, 0.69, 0]}
         rotation={[-Math.PI / 2, 0, 0]}
-        fontSize={0.1}
+        fontSize={0.088}
         letterSpacing={0.14}
-        color="#A8863A"
+        color="#9A7830"
         anchorX="center"
         anchorY="middle"
       >
         O | M
       </Text>
 
-      {/* ── Front label: OLYM ── */}
+      {/* ── Front label: OLYM — floats just in front of glass surface ── */}
       <Text
-        position={[0, -0.04, 1.18]}
-        fontSize={0.145}
-        letterSpacing={0.3}
+        position={[0, -0.04, 1.22]}
+        fontSize={0.14}
+        letterSpacing={0.32}
         color="#E8D19A"
         anchorX="center"
         anchorY="middle"
-        material={emblemMat}
       >
         OLYM
       </Text>
 
       {/* ── Front label: BODY CREAM ── */}
       <Text
-        position={[0, -0.23, 1.165]}
-        fontSize={0.063}
+        position={[0, -0.21, 1.19]}
+        fontSize={0.06}
         letterSpacing={0.18}
         color="#D4B87E"
         anchorX="center"
@@ -187,10 +203,10 @@ function JarProduct() {
         BODY CREAM
       </Text>
 
-      {/* ── Front label: 200 ML / fl oz ── */}
+      {/* ── Front label: volume line ── */}
       <Text
-        position={[0, -0.36, 1.15]}
-        fontSize={0.048}
+        position={[0, -0.33, 1.17]}
+        fontSize={0.044}
         letterSpacing={0.1}
         color="#C4A86E"
         anchorX="center"
@@ -199,15 +215,15 @@ function JarProduct() {
         {"200 ML  e  6.7 FL OZ"}
       </Text>
 
-      {/* ── Specular highlight strip — front left ── */}
-      <mesh position={[-0.52, 0.0, 1.08]} rotation={[0, Math.PI * 0.14, 0]}>
-        <planeGeometry args={[0.055, 0.72]} />
+      {/* ── Soft specular edge glow — left ── */}
+      <mesh position={[-0.60, 0.02, 0.96]} rotation={[0, Math.PI * 0.22, 0]}>
+        <planeGeometry args={[0.028, 0.6]} />
         <primitive object={highlightMat} attach="material" />
       </mesh>
 
-      {/* ── Specular highlight strip — front right ── */}
-      <mesh position={[0.52, 0.0, 1.08]} rotation={[0, -Math.PI * 0.14, 0]}>
-        <planeGeometry args={[0.055, 0.72]} />
+      {/* ── Soft specular edge glow — right ── */}
+      <mesh position={[0.60, 0.02, 0.96]} rotation={[0, -Math.PI * 0.22, 0]}>
+        <planeGeometry args={[0.028, 0.6]} />
         <primitive object={highlightMat} attach="material" />
       </mesh>
 

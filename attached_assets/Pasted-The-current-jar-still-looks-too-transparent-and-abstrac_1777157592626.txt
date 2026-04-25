@@ -1,0 +1,56 @@
+The current jar still looks too transparent and abstract. It must look like the uploaded OLYM SKIN reference image.
+
+Refine ONLY JarProduct() in:
+artifacts/olym/src/components/ProductExperience.tsx
+
+Do not change layout, Canvas, section text, fallback, lighting, or OrbitControls.
+
+TARGET LOOK:
+A luxury cosmetic cream jar like the reference:
+- squat, wide body
+- deep ruby/cherry wine jar
+- glossy but mostly opaque
+- only slight translucency at the edges and bottom
+- heavy thick glass base
+- rounded bulbous bottom
+- inward tapered upper shoulder
+- flat brushed champagne-gold lid
+- thin black shadow line between lid and jar
+- no floating pieces
+- no obvious see-through internal shapes
+- no giant pale gold ring wrapping through the middle
+
+CRITICAL CHANGES:
+1. Remove the large pale gold ring around the jar body. It does not exist in the reference. Keep only a subtle dark/gold bottom rim if needed.
+2. Make the jar body much more opaque:
+   - opacity 0.98 or fully opaque
+   - remove transmission
+   - remove excessive transparency
+   - color #4B0710 / #5A0A14 / #6E0F1A
+   - roughness around 0.18
+   - metalness 0.05
+   - envMapIntensity 1.6
+3. Make the base darker, thicker, and glossier, like dense red glass.
+4. Make the lid champagne gold, opaque, metallic, and slightly brushed:
+   - color #D1AD6F
+   - metalness 0.95
+   - roughness 0.22
+5. Make the body shape closer to the reference:
+   - wider bottom
+   - shorter body
+   - soft inward taper near the top
+   - rounded heavy lower base
+6. Text should sit on the FRONT surface, not inside the glass:
+   - OLYM in clear gold letters
+   - BODY CREAM below
+   - smaller volume line below
+   - position text slightly in front of the jar surface so it is readable
+7. Highlights should look like glossy reflections:
+   - soft vertical curved highlights on left/right
+   - low opacity
+   - not rectangular bars
+8. The lid should sit directly above the jar with a thin black gap, not floating high.
+
+Use the uploaded reference image as the visual target. The final result should resemble the reference jar, not a transparent red science beaker.
+
+Only update JarProduct() and necessary material/import code.
