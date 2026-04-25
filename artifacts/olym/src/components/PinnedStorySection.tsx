@@ -7,9 +7,15 @@ gsap.registerPlugin(ScrollTrigger);
 interface PinnedStorySectionProps {
   id: string;
   lines: string[];
-  /* Replace with your image URL — e.g. /images/story1.jpg */
+  /**
+   * One image URL per line. The image at index i is shown while line i is visible.
+   * If imageSrcs has fewer entries than lines, the last image repeats.
+   * Falls back to imageSrc (single) for backward compatibility.
+   * Replace each URL with your own — e.g. /images/story1-a.jpg
+   */
+  imageSrcs?: string[];
+  /** Single image fallback (used if imageSrcs is not provided) */
   imageSrc?: string;
-  imageAlt?: string;
   imagePosition?: string;
   testId?: string;
 }
@@ -17,50 +23,89 @@ interface PinnedStorySectionProps {
 export default function PinnedStorySection({
   id,
   lines,
+  imageSrcs,
   imageSrc,
-  imageAlt = "OLYM skincare",
   imagePosition = "center",
   testId = "section-pinned-story",
 }: PinnedStorySectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
+
+  // Build resolved image list: one per line
+  const FALLBACK = "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop";
+  const resolvedImages: string[] = lines.map((_, i) => {
+    if (imageSrcs && imageSrcs.length > 0) {
+      return imageSrcs[Math.min(i, imageSrcs.length - 1)];
+    }
+    return imageSrc || FALLBACK;
+  });
+
+  const n = lines.length;
 
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
 
-    const matchMedia = gsap.matchMedia();
+    const mm = gsap.matchMedia();
 
-    matchMedia.add("(prefers-reduced-motion: no-preference)", () => {
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: `+=${lines.length * 300}`,
-          scrub: 1.5,
+          end: `+=${n * 340}`,
+          scrub: 1.8,
           pin: true,
           anticipatePin: 1,
         },
       });
 
+      // Overlay breathes slightly as user scrolls
       if (overlayRef.current) {
         tl.fromTo(
           overlayRef.current,
-          { opacity: 0.5 },
-          { opacity: 0.72, duration: 0.4 },
+          { opacity: 0.52 },
+          { opacity: 0.74, duration: 1 },
           0
         );
       }
 
+      // Image crossfades: image[0] starts fully visible.
+      // Each subsequent image fades in just before its paired text line.
+      for (let i = 1; i < n; i++) {
+        const crossfadeStart = (i / n) - (0.18 / n) * n; // slight lead before line
+        const crossfadeDuration = 0.32 / n;
+
+        // Fade out previous image
+        if (imageRefs.current[i - 1]) {
+          tl.to(
+            imageRefs.current[i - 1]!,
+            { opacity: 0, duration: crossfadeDuration, ease: "power1.inOut" },
+            crossfadeStart
+          );
+        }
+        // Fade in next image
+        if (imageRefs.current[i]) {
+          tl.fromTo(
+            imageRefs.current[i]!,
+            { opacity: 0 },
+            { opacity: 1, duration: crossfadeDuration, ease: "power1.inOut" },
+            crossfadeStart
+          );
+        }
+      }
+
+      // Text lines: each fades in at its own scroll stage
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
-        const start = i / lines.length;
+        const stageStart = i / n;
         tl.fromTo(
           el,
-          { opacity: 0, y: 28 },
-          { opacity: 1, y: 0, duration: 0.5, ease: "power2.out" },
-          start
+          { opacity: 0, y: 26 },
+          { opacity: 1, y: 0, duration: 0.42 / n, ease: "power2.out" },
+          stageStart
         );
       });
 
@@ -71,10 +116,8 @@ export default function PinnedStorySection({
       };
     });
 
-    return () => matchMedia.revert();
-  }, [lines]);
-
-  const placeholder = `https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop`;
+    return () => mm.revert();
+  }, [n]);
 
   return (
     <section
@@ -92,17 +135,24 @@ export default function PinnedStorySection({
         justifyContent: "center",
       }}
     >
-      {/* Background image — replace imageSrc prop to customize */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: `url(${imageSrc || placeholder})`,
-          backgroundSize: "cover",
-          backgroundPosition: imagePosition,
-          backgroundRepeat: "no-repeat",
-        }}
-      />
+      {/* One background div per image, stacked — crossfaded by GSAP */}
+      {resolvedImages.map((src, i) => (
+        <div
+          key={i}
+          ref={(el) => { imageRefs.current[i] = el; }}
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${src})`,
+            backgroundSize: "cover",
+            backgroundPosition: imagePosition,
+            backgroundRepeat: "no-repeat",
+            // First image starts visible; rest start hidden
+            opacity: i === 0 ? 1 : 0,
+            willChange: "opacity",
+          }}
+        />
+      ))}
 
       {/* Dark gradient overlay */}
       <div
@@ -112,6 +162,7 @@ export default function PinnedStorySection({
           inset: 0,
           background:
             "linear-gradient(135deg, rgba(10,10,10,0.7) 0%, rgba(59,10,15,0.45) 100%)",
+          zIndex: 1,
         }}
       />
 
@@ -128,12 +179,14 @@ export default function PinnedStorySection({
         {lines.map((line, i) => (
           <div
             key={i}
-            style={{ display: "block", overflow: "visible", marginBottom: i < lines.length - 1 ? "0.6rem" : 0 }}
+            style={{
+              display: "block",
+              overflow: "visible",
+              marginBottom: i < lines.length - 1 ? "0.6rem" : 0,
+            }}
           >
             <span
-              ref={(el) => {
-                lineRefs.current[i] = el;
-              }}
+              ref={(el) => { lineRefs.current[i] = el; }}
               data-testid={`text-story-line-${i}`}
               style={{
                 display: "block",

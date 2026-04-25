@@ -22,16 +22,21 @@ export default function Home() {
       {/* 2. Hero Video Section */}
       <HeroVideo onEnter={() => scrollToSection("story-1")} />
 
-      {/* 3. Cinematic Pinned Story Section One */}
+      {/* 3. Pinned Story Section One — 2 lines, 2 images */}
+      {/* Replace each imageSrcs entry with your own file, e.g. /images/story-1a.jpg */}
       <PinnedStorySection
         id="story-1"
         testId="section-story-1"
         lines={["From surface moisture", "to lasting hydration"]}
-        /* Replace imageSrc with your actual image, e.g. /images/story-1.jpg */
-        imageSrc="https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop"
+        imageSrcs={[
+          "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop",
+          "https://images.unsplash.com/photo-1556228578-567ba127e37f?w=1920&q=80&fit=crop",
+        ]}
+        imagePosition="center"
       />
 
-      {/* 4. Cinematic Pinned Story Section Two */}
+      {/* 4. Pinned Story Section Two — 3 lines, 3 images */}
+      {/* Replace each imageSrcs entry with your own file, e.g. /images/story-2a.jpg */}
       <PinnedStorySection
         id="story-2"
         testId="section-story-2"
@@ -40,12 +45,16 @@ export default function Home() {
           "Without hydration that fades.",
           "Without the excess.",
         ]}
-        /* Replace imageSrc with your actual image, e.g. /images/story-2.jpg */
-        imageSrc="https://images.unsplash.com/photo-1629044765536-ff09b1fbada5?w=1920&q=80&fit=crop"
+        imageSrcs={[
+          "https://images.unsplash.com/photo-1629044765536-ff09b1fbada5?w=1920&q=80&fit=crop",
+          "https://images.unsplash.com/photo-1570194065650-d99fb4b38f72?w=1920&q=80&fit=crop",
+          "https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1920&q=80&fit=crop",
+        ]}
         imagePosition="center 40%"
       />
 
-      {/* 5. Cinematic Pinned Story Section Three */}
+      {/* 5. Pinned Story Section Three — 2 lines, 2 images */}
+      {/* Replace each imageSrcs entry with your own file, e.g. /images/story-3a.jpg */}
       <PinnedStorySection
         id="story-3"
         testId="section-story-3"
@@ -53,8 +62,10 @@ export default function Home() {
           "Less layering. More function.",
           "One treatment that does what others can't.",
         ]}
-        /* Replace imageSrc with your actual image, e.g. /images/story-3.jpg */
-        imageSrc="https://images.unsplash.com/photo-1570194065650-d99fb4b38f72?w=1920&q=80&fit=crop"
+        imageSrcs={[
+          "https://images.unsplash.com/photo-1643185540009-fefca91db3be?w=1920&q=80&fit=crop",
+          "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=1920&q=80&fit=crop",
+        ]}
         imagePosition="center 60%"
       />
 
