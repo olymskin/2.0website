@@ -1,0 +1,152 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+
+interface HeroVideoProps {
+  onEnter: () => void;
+}
+
+export default function HeroVideo({ onEnter }: HeroVideoProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const textRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.from(textRef.current, {
+        opacity: 0,
+        y: 30,
+        duration: 2.2,
+        delay: 0.6,
+        ease: "power3.out",
+      });
+    }, containerRef);
+    return () => ctx.revert();
+  }, []);
+
+  return (
+    <section
+      ref={containerRef}
+      id="hero"
+      data-testid="section-hero"
+      style={{
+        position: "relative",
+        height: "100dvh",
+        minHeight: "600px",
+        width: "100%",
+        overflow: "hidden",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      {/* VIDEO BACKGROUND — replace src with your video file */}
+      <video
+        autoPlay
+        muted
+        loop
+        playsInline
+        data-testid="video-hero"
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          opacity: 0.55,
+        }}
+      >
+        {/* Replace this src with your actual video file, e.g. /videos/hero.mp4 */}
+        <source
+          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          type="video/mp4"
+        />
+      </video>
+
+      {/* Dark overlay */}
+      <div
+        style={{
+          position: "absolute",
+          inset: 0,
+          background:
+            "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.75) 100%)",
+        }}
+      />
+
+      {/* Text content */}
+      <div
+        ref={textRef}
+        style={{
+          position: "relative",
+          zIndex: 10,
+          textAlign: "center",
+          padding: "0 1.5rem",
+          maxWidth: "800px",
+        }}
+      >
+        <h1
+          data-testid="text-hero-headline"
+          style={{
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontSize: "clamp(2.8rem, 7vw, 6rem)",
+            fontWeight: 300,
+            lineHeight: 1.08,
+            letterSpacing: "0.02em",
+            color: "#F4EFE9",
+            marginBottom: "1.5rem",
+            fontStyle: "italic",
+          }}
+        >
+          Firm, hydrated skin—
+          <br />
+          done right.
+        </h1>
+
+        <p
+          data-testid="text-hero-subtext"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "clamp(0.8rem, 1.8vw, 0.95rem)",
+            fontWeight: 300,
+            letterSpacing: "0.12em",
+            color: "#A89C92",
+            marginBottom: "3rem",
+            textTransform: "uppercase",
+          }}
+        >
+          Deep hydration and barrier repair for melanated skin.
+        </p>
+
+        <button
+          onClick={onEnter}
+          data-testid="button-enter"
+          className="olym-btn-gold"
+        >
+          Enter
+        </button>
+      </div>
+
+      {/* Scroll hint */}
+      <div
+        style={{
+          position: "absolute",
+          bottom: "2.5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "8px",
+          opacity: 0.4,
+        }}
+      >
+        <div
+          style={{
+            width: "1px",
+            height: "48px",
+            background: "linear-gradient(to bottom, transparent, #C6A46A)",
+            animation: "pulse 2s ease-in-out infinite",
+          }}
+        />
+      </div>
+    </section>
+  );
+}

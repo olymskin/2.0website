@@ -1,0 +1,164 @@
+Copy and paste this into Replit:
+
+```text
+Build a high-end cinematic landing page for a luxury skincare brand called OLYM.
+
+Use:
+- Next.js with App Router
+- Tailwind CSS
+- GSAP + ScrollTrigger
+- React Three Fiber / Three.js for the interactive product section
+- Fully responsive mobile-first design
+- Optimized for mobile Safari
+- Clean component structure
+
+Design system:
+
+Colors:
+- Background: #0A0A0A
+- Primary accent: #6E0F1A
+- Secondary accent: #3B0A0F
+- Highlight gold: #C6A46A
+- Text primary: #F4EFE9
+- Text secondary: #A89C92
+
+Typography:
+- Headings: Playfair Display or Cormorant Garamond
+- Body: Inter
+- Use large editorial serif headlines
+- Use clean sans-serif body text
+- Keep spacing generous and luxurious
+
+Overall style:
+- Warm luxury skincare aesthetic
+- Cinematic, minimal, elegant
+- Dark backgrounds
+- Cherry wine and soft gold accents
+- Slow, restrained animations
+- Nothing bouncy, playful, or overly animated
+
+Website structure:
+
+1. Floating Header
+- Logo text “OLYM” in the top right corner
+- Header floats over the page
+- Header is visible at page load
+- Header fades out when scrolling down
+- Header fades back in when scrolling up
+- Minimal menu icon on the top left
+
+2. Hero Video Section
+- Fullscreen autoplay muted looping video background
+- Dark overlay for readability
+- Large editorial headline:
+  “Firm, hydrated skin—done right.”
+- Subtext:
+  “Deep hydration and barrier repair for melanated skin.”
+- Minimal CTA button that says:
+  “Enter”
+- Button should open or scroll to the video/product story section
+- Text fades in slowly on load
+
+3. Cinematic Pinned Story Section One
+- Fullscreen section
+- Background image stays fixed/pinned while scrolling
+- Text appears over image in stages
+- Use GSAP ScrollTrigger
+- Text:
+  “From surface moisture”
+  “to lasting hydration”
+- Background should subtly transition/fade as user scrolls
+- Text should fade in and slightly move upward
+
+4. Cinematic Pinned Story Section Two
+- Fullscreen image background
+- Text overlay:
+  “Without heaviness.”
+  “Without hydration that fades.”
+  “Without the excess.”
+- Each line appears one at a time while section is pinned
+- Smooth, slow scroll timing
+
+5. Cinematic Pinned Story Section Three
+- Fullscreen image background
+- Text overlay:
+  “Less layering. More function.”
+  “One treatment that does what others can’t.”
+- Use a subtle dark gradient overlay
+- Text should feel calm and premium
+
+6. Rich Text Section
+- Solid dark background
+- Centered typography
+- Text:
+  “Firming Barrier Treatment Cream”
+  “A fast-absorbing treatment that moves like a gel, finishes like a cream, and supports the skin barrier from within.”
+- Add CTA button:
+  “Discover the Treatment”
+- Button styling: thin gold border, soft hover, luxury feel
+
+7. Interactive Product Section
+- Use React Three Fiber / Three.js
+- Display a placeholder luxury cosmetic jar or simple 3D cylinder product if no model is available
+- Product should auto-rotate slowly
+- User can drag/touch to rotate
+- Add lighting that feels warm and premium
+- Background: deep black / burgundy gradient
+- Text overlay:
+  “Engineered for performance.”
+- Keep this section optimized for mobile
+
+8. Hero Image Section
+- Fullscreen static hero image
+- No button
+- Minimal motion only
+- Use this text:
+  “For us. Done right.”
+
+9. Founder Circle Overlay Section
+- Same or similar hero image background
+- Text appears over the image on scroll:
+  “Before it becomes public, it’s refined.”
+  “A private development circle for women shaping the future of skin.”
+  “Inside the Founder Circle.”
+- Use pinned scroll or slow fade-in text
+
+10. Final Rich Text CTA Section
+- Solid dark background
+- Text:
+  “Not available—yet.”
+  “Reserved for the Founder Circle.”
+  “Apply for access”
+- Make “Apply for access” a prominent CTA button
+- Button should link to a placeholder Tally form URL: https://tally.so
+- Keep the final section clean and powerful
+
+11. Footer
+- Minimal footer
+- Logo: OLYM
+- Small links: Founder Circle, Privacy, Contact
+- Use muted taupe text
+
+Animation requirements:
+- Use GSAP ScrollTrigger for pinned sections
+- Use fade, opacity, slight translateY, and image crossfades
+- Do not use bounce effects
+- Do not over-animate
+- Keep animations slow, elegant, and smooth
+- Respect prefers-reduced-motion if possible
+
+Technical requirements:
+- Use placeholder images and videos for now
+- Make it easy for me to replace media files later
+- Organize components clearly:
+  Header
+  HeroVideo
+  PinnedStorySection
+  RichTextSection
+  ProductExperience
+  FounderCircleSection
+  Footer
+- Add comments showing where to replace images, videos, and Tally link
+- Make sure the site runs without errors
+- Make it deployable to Vercel
+```
