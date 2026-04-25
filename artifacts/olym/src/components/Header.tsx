@@ -48,50 +48,16 @@ export default function Header() {
         style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          padding: "1.75rem 2.5rem",
+          justifyContent: "flex-start",
+          padding: "1.75rem 1.5rem",
         }}
       >
-        {/* Menu icon — top left */}
-        <button
-          aria-label="Menu"
-          data-testid="button-menu"
-          style={{
-            background: "none",
-            border: "none",
-            cursor: "pointer",
-            display: "flex",
-            flexDirection: "column",
-            gap: "5px",
-            padding: "4px",
-          }}
-        >
-          <span
-            style={{
-              display: "block",
-              width: "22px",
-              height: "1px",
-              backgroundColor: "#F4EFE9",
-              opacity: 0.8,
-            }}
-          />
-          <span
-            style={{
-              display: "block",
-              width: "14px",
-              height: "1px",
-              backgroundColor: "#F4EFE9",
-              opacity: 0.8,
-            }}
-          />
-        </button>
-
-        {/* Logo — top right */}
+        {/* Logo — left-aligned */}
         <div
           data-testid="text-logo"
           style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "1.05rem",
+            fontSize: "1.3rem",
             letterSpacing: "0.35em",
             color: "#F4EFE9",
             fontWeight: 400,
