@@ -47,8 +47,8 @@ export default function Home() {
           testId="section-story-1"
           lines={["From surface moisture", "to lasting hydration"]}
           imageSrcs={[
-            "/images/skin-1.png",
-            "/images/skin-6.jpeg",
+            "/images/skin-1.png?v=2",
+            "/images/skin-2.png?v=2",
           ]}
           imagePosition="center"
         />
@@ -65,9 +65,9 @@ export default function Home() {
             "Without the excess.",
           ]}
           imageSrcs={[
-            "https://images.unsplash.com/photo-1629044765536-ff09b1fbada5?w=1920&q=80&fit=crop",
-            "https://images.unsplash.com/photo-1570194065650-d99fb4b38f72?w=1920&q=80&fit=crop",
-            "https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1920&q=80&fit=crop",
+            "/images/skin-3.jpeg?v=2",
+            "/images/skin-4.png?v=2",
+            "/images/skin-5.png?v=2",
           ]}
           imagePosition="center 40%"
         />
@@ -83,8 +83,8 @@ export default function Home() {
             "One treatment that does what others can't.",
           ]}
           imageSrcs={[
-            "https://images.unsplash.com/photo-1643185540009-fefca91db3be?w=1920&q=80&fit=crop",
-            "https://images.unsplash.com/photo-1556228453-efd6c1ff04f6?w=1920&q=80&fit=crop",
+            "/images/allwomenfirst.png?v=2",
+            "/images/womenallred.png?v=2",
           ]}
           imagePosition="center 60%"
         />
@@ -108,12 +108,12 @@ export default function Home() {
 
       {/* 8. Hero Image */}
       <ScrollFadeSection zIndex={15} stickyPin pinBuffer="30vh">
-        <HeroImageSection imageSrc="/images/skin-6.png" />
+        <HeroImageSection imageSrc="/images/skin-6.png?v=2" />
       </ScrollFadeSection>
 
       {/* 9. Founder Circle */}
       <ScrollFadeSection zIndex={16} stickyPin pinBuffer="28vh">
-        <FounderCircleSection imageSrc="https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1920&q=80&fit=crop" />
+        <FounderCircleSection imageSrc="/images/augustinus.jpeg?v=2" />
       </ScrollFadeSection>
 
       {/* 10. Final CTA */}
