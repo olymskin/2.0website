@@ -29,8 +29,8 @@ export default function Home() {
         testId="section-story-1"
         lines={["From surface moisture", "to lasting hydration"]}
         imageSrcs={[
-          "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop",
-          "https://images.unsplash.com/photo-1556228578-567ba127e37f?w=1920&q=80&fit=crop",
+          "/images/skin-1.png",
+          "/images/skin-6.jpeg",
         ]}
         imagePosition="center"
       />
@@ -82,7 +82,7 @@ export default function Home() {
 
       {/* 8. Hero Image Section */}
       {/* Replace imageSrc with your actual image, e.g. /images/for-us.jpg */}
-      <HeroImageSection imageSrc="https://images.unsplash.com/photo-1643185540009-fefca91db3be?w=1920&q=80&fit=crop" />
+      <HeroImageSection imageSrc="/images/skin-6.png" />
 
       {/* 9. Founder Circle Overlay Section */}
       {/* Replace imageSrc with your actual image, e.g. /images/founder.jpg */}

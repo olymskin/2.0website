@@ -1,330 +1,228 @@
-import { Suspense, useRef, useMemo, Component, ErrorInfo, ReactNode } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { OrbitControls, Environment, Cylinder, Text } from "@react-three/drei";
-import * as THREE from "three";
+import { useEffect, useRef, useState } from "react";
 
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
+const rotationFrames = [
+  "/jar/frame1.png",
+  "/jar/frame2.png",
+  "/jar/frame3.png",
+  "/jar/frame4.png",
+  "/jar/frame5.png",
+  "/jar/frame6.png",
+  "/jar/frame7.png",
+];
 
-class WebGLErrorBoundary extends Component<
-  { children: ReactNode; fallback: ReactNode },
-  ErrorBoundaryState
-> {
-  state: ErrorBoundaryState = { hasError: false };
+const detailFrames = ["/jar/frame8.png", "/jar/frame9.png"];
 
-  static getDerivedStateFromError(): ErrorBoundaryState {
-    return { hasError: true };
-  }
+const allFrames = [...rotationFrames, ...detailFrames];
 
-  componentDidCatch(_error: Error, _info: ErrorInfo) {}
+function JarImageViewer() {
+  const [frame, setFrame] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
+  const [isDetailView, setIsDetailView] = useState(false);
 
-  render() {
-    if (this.state.hasError) return this.props.fallback;
-    return this.props.children;
-  }
-}
+  const startX = useRef(0);
+  const startY = useRef(0);
+  const lastX = useRef(0);
+  const dragging = useRef(false);
 
-function JarProduct() {
-  const groupRef = useRef<THREE.Group>(null);
+  useEffect(() => {
+    allFrames.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
 
-  useFrame((state) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += 0.004;
-      groupRef.current.position.y =
-        Math.sin(state.clock.getElapsedTime() * 0.6) * 0.04;
+  const beginDrag = (x: number, y: number) => {
+    dragging.current = true;
+    startX.current = x;
+    startY.current = y;
+    lastX.current = x;
+    setIsDragging(true);
+  };
+
+  const moveDrag = (x: number, y: number) => {
+    if (!dragging.current) return;
+
+    const totalY = y - startY.current;
+    const deltaX = x - lastX.current;
+
+    if (totalY < -55) {
+      setIsDetailView(true);
+      setFrame(rotationFrames.length);
+      return;
     }
-  });
 
-  // ── Materials ──────────────────────────────────────────────────────────────
+    if (totalY > 45 && isDetailView) {
+      setIsDetailView(false);
+      setFrame(0);
+      return;
+    }
 
-  // Opaque deep ruby/cherry wine glass — glossy, dense, solid
-  const glassMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#5A0A14",
-        metalness: 0.06,
-        roughness: 0.16,
-        envMapIntensity: 1.8,
-      }),
-    []
-  );
+    if (isDetailView) {
+      if (Math.abs(deltaX) > 24) {
+        setFrame((prev) =>
+          prev === rotationFrames.length
+            ? rotationFrames.length + 1
+            : rotationFrames.length
+        );
+        lastX.current = x;
+      }
+      return;
+    }
 
-  // Darker, denser lower base — heavier glass feel
-  const baseMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#3D0008",
-        metalness: 0.08,
-        roughness: 0.2,
-        envMapIntensity: 1.6,
-      }),
-    []
-  );
+    if (Math.abs(deltaX) > 14) {
+      setFrame((prev) =>
+        deltaX > 0
+          ? (prev - 1 + rotationFrames.length) % rotationFrames.length
+          : (prev + 1) % rotationFrames.length
+      );
 
-  // Brushed champagne gold lid
-  const lidMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#D1AD6F",
-        metalness: 0.95,
-        roughness: 0.22,
-        envMapIntensity: 2.0,
-      }),
-    []
-  );
+      lastX.current = x;
+    }
+  };
 
-  // Near-black shadow gap ring between lid and body
-  const gapMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#050203",
-        metalness: 0.02,
-        roughness: 0.98,
-      }),
-    []
-  );
+  const endDrag = () => {
+    dragging.current = false;
+    setIsDragging(false);
+  };
 
-  // Darker embossed gold for emblem detail
-  const emblemMat = useMemo(
-    () =>
-      new THREE.MeshStandardMaterial({
-        color: "#9A7830",
-        metalness: 0.9,
-        roughness: 0.3,
-        envMapIntensity: 1.6,
-      }),
-    []
-  );
-
-  // Very subtle specular edge highlights — nearly invisible
-  const highlightMat = useMemo(
-    () =>
-      new THREE.MeshBasicMaterial({
-        color: "#ffffff",
-        transparent: true,
-        opacity: 0.04,
-        side: THREE.DoubleSide,
-        depthWrite: false,
-      }),
-    []
-  );
-
-  // ── Geometry stack (bottom → top) ─────────────────────────────────────────
-  //   bottom cap disc       y = -0.60
-  //   heavy base bulge      center y = -0.43, h = 0.32   top at -0.27
-  //   main body             center y = -0.09, h = 0.64   top at  0.23
-  //   upper shoulder taper  center y =  0.32, h = 0.20   top at  0.42
-  //   shadow gap            center y =  0.435, h = 0.022
-  //   gold lid              center y =  0.558, h = 0.24  top at  0.678
-  //   lid top cap disc      y =  0.680
-
-  return (
-    <group ref={groupRef} position={[0, 0, 0]}>
-
-      {/* ── Bottom face cap — seals the base ── */}
-      <mesh position={[0, -0.60, 0]} rotation={[Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.26, 96]} />
-        <meshStandardMaterial color="#280005" metalness={0.1} roughness={0.35} />
-      </mesh>
-
-      {/* ── Heavy rounded base bulge ── */}
-      <Cylinder args={[1.22, 1.26, 0.32, 96]} material={baseMat} position={[0, -0.43, 0]} />
-
-      {/* ── Main wide glass body ── */}
-      <Cylinder args={[1.0, 1.22, 0.64, 96]} material={glassMat} position={[0, -0.09, 0]} />
-
-      {/* ── Upper shoulder — inward taper toward lid ── */}
-      <Cylinder args={[0.86, 1.0, 0.20, 96]} material={glassMat} position={[0, 0.32, 0]} />
-
-      {/* ── Thin black shadow gap between body and lid ── */}
-      <Cylinder args={[0.98, 0.98, 0.022, 96]} material={gapMat} position={[0, 0.435, 0]} />
-
-      {/* ── Gold lid — sits flush directly above gap ── */}
-      <Cylinder args={[1.02, 1.02, 0.24, 96]} material={lidMat} position={[0, 0.558, 0]} />
-
-      {/* ── Lid top face cap ── */}
-      <mesh position={[0, 0.679, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <circleGeometry args={[1.02, 96]} />
-        <meshStandardMaterial
-          color="#D1AD6F"
-          metalness={0.95}
-          roughness={0.22}
-          envMapIntensity={2.0}
-        />
-      </mesh>
-
-      {/* ── Lid emblem: outer torus ring ── */}
-      <mesh position={[0, 0.682, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.38, 0.013, 16, 96]} />
-        <primitive object={emblemMat} attach="material" />
-      </mesh>
-
-      {/* ── Lid emblem: inner torus ring ── */}
-      <mesh position={[0, 0.682, 0]} rotation={[-Math.PI / 2, 0, 0]}>
-        <torusGeometry args={[0.22, 0.009, 16, 96]} />
-        <primitive object={emblemMat} attach="material" />
-      </mesh>
-
-      {/* ── Lid emblem: "O | M" flat on lid top ── */}
-      <Text
-        position={[0, 0.69, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
-        fontSize={0.088}
-        letterSpacing={0.14}
-        color="#9A7830"
-        anchorX="center"
-        anchorY="middle"
-      >
-        O | M
-      </Text>
-
-      {/* ── Front label: OLYM — floats just in front of glass surface ── */}
-      <Text
-        position={[0, -0.04, 1.22]}
-        fontSize={0.14}
-        letterSpacing={0.32}
-        color="#E8D19A"
-        anchorX="center"
-        anchorY="middle"
-      >
-        OLYM
-      </Text>
-
-      {/* ── Front label: BODY CREAM ── */}
-      <Text
-        position={[0, -0.21, 1.19]}
-        fontSize={0.06}
-        letterSpacing={0.18}
-        color="#D4B87E"
-        anchorX="center"
-        anchorY="middle"
-      >
-        BODY CREAM
-      </Text>
-
-      {/* ── Front label: volume line ── */}
-      <Text
-        position={[0, -0.33, 1.17]}
-        fontSize={0.044}
-        letterSpacing={0.1}
-        color="#C4A86E"
-        anchorX="center"
-        anchorY="middle"
-      >
-        {"200 ML  e  6.7 FL OZ"}
-      </Text>
-
-      {/* ── Soft specular edge glow — left ── */}
-      <mesh position={[-0.60, 0.02, 0.96]} rotation={[0, Math.PI * 0.22, 0]}>
-        <planeGeometry args={[0.028, 0.6]} />
-        <primitive object={highlightMat} attach="material" />
-      </mesh>
-
-      {/* ── Soft specular edge glow — right ── */}
-      <mesh position={[0.60, 0.02, 0.96]} rotation={[0, -Math.PI * 0.22, 0]}>
-        <planeGeometry args={[0.028, 0.6]} />
-        <primitive object={highlightMat} attach="material" />
-      </mesh>
-
-    </group>
-  );
-}
-
-function ProductScene() {
-  return (
-    <>
-      <ambientLight intensity={0.2} />
-      <directionalLight position={[3, 4, 3]} intensity={1.2} color="#fdf0dc" />
-      <directionalLight position={[-4, 1, -2]} intensity={0.4} color="#c6a46a" />
-      <pointLight position={[0, 3, 2]} intensity={0.8} color="#ffe8c0" distance={8} />
-      <pointLight position={[2, -2, 1]} intensity={0.4} color="#6E0F1A" distance={6} />
-      <JarProduct />
-      <OrbitControls
-        enableZoom={false}
-        enablePan={false}
-        autoRotate={false}
-        minPolarAngle={Math.PI / 3}
-        maxPolarAngle={Math.PI / 1.7}
-        rotateSpeed={0.5}
-        dampingFactor={0.08}
-        enableDamping
-      />
-      <Environment preset="night" />
-    </>
-  );
-}
-
-function StaticJarFallback() {
   return (
     <div
+      data-testid="jar-image-viewer"
       style={{
-        width: "180px",
-        height: "220px",
+        width: "100%",
+        maxWidth: "640px",
+        height: "clamp(340px, 58vw, 560px)",
         margin: "0 auto",
         position: "relative",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        touchAction: "none",
+        cursor: isDragging ? "grabbing" : "grab",
+        userSelect: "none",
+        WebkitUserSelect: "none",
       }}
+      onMouseDown={(e) => beginDrag(e.clientX, e.clientY)}
+      onMouseMove={(e) => moveDrag(e.clientX, e.clientY)}
+      onMouseUp={endDrag}
+      onMouseLeave={endDrag}
+      onTouchStart={(e) => {
+        const touch = e.touches[0];
+        beginDrag(touch.clientX, touch.clientY);
+      }}
+      onTouchMove={(e) => {
+        const touch = e.touches[0];
+        moveDrag(touch.clientX, touch.clientY);
+      }}
+      onTouchEnd={endDrag}
     >
+      <style>
+        {`
+          @keyframes olymJarFloat {
+            0% {
+              transform: translateY(0px) scale(1);
+            }
+            50% {
+              transform: translateY(-14px) scale(1.01);
+            }
+            100% {
+              transform: translateY(0px) scale(1);
+            }
+          }
+
+          @keyframes olymGlowPulse {
+            0% {
+              opacity: 0.65;
+              transform: scale(1);
+            }
+            50% {
+              opacity: 0.95;
+              transform: scale(1.05);
+            }
+            100% {
+              opacity: 0.65;
+              transform: scale(1);
+            }
+          }
+        `}
+      </style>
+
+      {/* soft product glow */}
       <div
         style={{
-          width: "140px",
-          height: "100px",
+          position: "absolute",
+          width: "76%",
+          height: "42%",
+          bottom: "8%",
+          borderRadius: "50%",
           background:
-            "linear-gradient(135deg, #4a0810 0%, #2a0508 60%, #3B0A0F 100%)",
-          borderRadius: "8px 8px 14px 14px",
-          border: "1px solid rgba(198,164,106,0.3)",
+            "radial-gradient(circle, rgba(110,15,26,0.42) 0%, rgba(110,15,26,0.15) 45%, transparent 72%)",
+          filter: "blur(22px)",
+          pointerEvents: "none",
+          animation: "olymGlowPulse 4.8s ease-in-out infinite",
+        }}
+      />
+
+      {/* soft floating shadow */}
+      <div
+        style={{
+          position: "absolute",
+          width: isDragging ? "62%" : "54%",
+          height: isDragging ? "10%" : "8%",
+          bottom: "12%",
+          borderRadius: "50%",
+          background: "rgba(0,0,0,0.58)",
+          filter: "blur(18px)",
+          pointerEvents: "none",
+          transition: "width 180ms ease, height 180ms ease",
+        }}
+      />
+
+      <img
+        src={allFrames[frame]}
+        alt="OLYM Skin body cream jar"
+        draggable={false}
+        style={{
           position: "relative",
-          boxShadow:
-            "0 0 40px rgba(198,164,106,0.08), inset 0 1px 0 rgba(198,164,106,0.1)",
+          zIndex: 2,
+          width: "min(94vw, 620px)",
+          maxHeight: "100%",
+          objectFit: "contain",
+          display: "block",
+          pointerEvents: "none",
+          animation: isDragging ? "none" : "olymJarFloat 5.2s ease-in-out infinite",
+          transform: isDragging ? "translateY(-8px) scale(1.035)" : undefined,
+          transition: "opacity 120ms ease, transform 180ms ease",
+          filter: "drop-shadow(0 32px 52px rgba(0,0,0,0.55))",
+        }}
+      />
+
+      <button
+        type="button"
+        onClick={() => {
+          setIsDetailView((prev) => !prev);
+          setFrame(isDetailView ? 0 : rotationFrames.length);
+        }}
+        style={{
+          position: "absolute",
+          right: "clamp(1rem, 5vw, 3rem)",
+          bottom: "1rem",
+          zIndex: 5,
+          border: "1px solid rgba(198,164,106,0.45)",
+          background: "rgba(10,10,10,0.42)",
+          color: "#C6A46A",
+          borderRadius: "999px",
+          padding: "0.65rem 0.9rem",
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "0.62rem",
+          letterSpacing: "0.18em",
+          textTransform: "uppercase",
+          backdropFilter: "blur(10px)",
+          cursor: "pointer",
         }}
       >
-        {/* Gold lid */}
-        <div
-          style={{
-            position: "absolute",
-            top: "-24px",
-            left: "-5px",
-            right: "-5px",
-            height: "28px",
-            background:
-              "linear-gradient(135deg, #D1AD6F 0%, #C6A46A 50%, #A8863A 100%)",
-            borderRadius: "6px 6px 2px 2px",
-            border: "1px solid rgba(198,164,106,0.5)",
-          }}
-        />
-        {/* Gold base rim */}
-        <div
-          style={{
-            position: "absolute",
-            bottom: "-4px",
-            left: "-5px",
-            right: "-5px",
-            height: "4px",
-            background: "#C6A46A",
-            borderRadius: "0 0 14px 14px",
-            opacity: 0.8,
-          }}
-        />
-        {/* Label text */}
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "0.75rem",
-            letterSpacing: "0.3em",
-            color: "#E8D19A",
-            textAlign: "center",
-          }}
-        >
-          OLYM
-        </div>
-      </div>
+        {isDetailView ? "Front View" : "View Details"}
+      </button>
     </div>
   );
 }
@@ -345,57 +243,40 @@ export default function ProductExperience() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
+        padding: "5rem 0 4rem",
       }}
     >
-      {/* Subtle background glow */}
       <div
         style={{
           position: "absolute",
-          width: "600px",
-          height: "600px",
+          width: "700px",
+          height: "700px",
           borderRadius: "50%",
           background:
-            "radial-gradient(circle, rgba(110,15,26,0.18) 0%, transparent 70%)",
-          top: "50%",
+            "radial-gradient(circle, rgba(110,15,26,0.24) 0%, rgba(110,15,26,0.09) 38%, transparent 70%)",
+          top: "48%",
           left: "50%",
           transform: "translate(-50%, -50%)",
           pointerEvents: "none",
         }}
       />
 
-      {/* Canvas 3D with WebGL error boundary */}
       <div
         style={{
           width: "100%",
-          maxWidth: "600px",
-          height: "clamp(320px, 55vw, 520px)",
           position: "relative",
+          zIndex: 3,
         }}
         data-testid="canvas-product"
       >
-        <WebGLErrorBoundary fallback={<StaticJarFallback />}>
-          <Canvas
-            camera={{ position: [0, 0.3, 3.2], fov: 38 }}
-            dpr={[1, 1.5]}
-            gl={{ antialias: true, alpha: true, failIfMajorPerformanceCaveat: false }}
-            style={{ background: "transparent" }}
-            onCreated={({ gl }) => {
-              gl.setClearColor(0x000000, 0);
-            }}
-          >
-            <Suspense fallback={null}>
-              <ProductScene />
-            </Suspense>
-          </Canvas>
-        </WebGLErrorBoundary>
+        <JarImageViewer />
       </div>
 
-      {/* Text overlay */}
       <div
         style={{
           textAlign: "center",
           padding: "0 1.5rem",
-          marginTop: "2rem",
+          marginTop: "1.5rem",
           position: "relative",
           zIndex: 10,
         }}
@@ -409,11 +290,12 @@ export default function ProductExperience() {
             color: "#C6A46A",
             textTransform: "uppercase",
             marginBottom: "1rem",
-            opacity: 0.7,
+            opacity: 0.72,
           }}
         >
           Drag to rotate
         </p>
+
         <h2
           data-testid="text-product-headline"
           style={{
