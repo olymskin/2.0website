@@ -101,7 +101,7 @@ export default function Home() {
         <FinalCTASection />
       </ScrollFadeSection>
 
-      <ScrollFadeSection zIndex={18} stickyPin pinBuffer="28vh">
+      <ScrollFadeSection zIndex={18}>
         <FounderCircleSection imageSrc="/images/3womenredback.png" />
       </ScrollFadeSection>
 
