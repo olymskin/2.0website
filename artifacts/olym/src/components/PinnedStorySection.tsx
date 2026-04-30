@@ -72,41 +72,43 @@ export default function PinnedStorySection({
         );
       }
 
-      // Image crossfades: image[0] starts fully visible.
-      // Each subsequent image fades in just before its paired text line.
-      for (let i = 1; i < n; i++) {
-        const crossfadeStart = (i / n) - (0.18 / n) * n; // slight lead before line
-        const crossfadeDuration = 0.32 / n;
+      // Text lines and image crossfades are tied to the same stage position.
+      // Line i becomes active at stageStart = i / n.
+      // Image i crossfades in at the same moment so they stay in sync.
+      const fadeDuration = 0.28 / n;
 
-        // Fade out previous image
-        if (imageRefs.current[i - 1]) {
-          tl.to(
-            imageRefs.current[i - 1]!,
-            { opacity: 0, duration: crossfadeDuration, ease: "power1.inOut" },
-            crossfadeStart
-          );
-        }
-        // Fade in next image
-        if (imageRefs.current[i]) {
-          tl.fromTo(
-            imageRefs.current[i]!,
-            { opacity: 0 },
-            { opacity: 1, duration: crossfadeDuration, ease: "power1.inOut" },
-            crossfadeStart
-          );
-        }
-      }
-
-      // Text lines: each fades in at its own scroll stage
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
         const stageStart = i / n;
+
+        // Animate text line in
         tl.fromTo(
           el,
           { opacity: 0, y: 26 },
           { opacity: 1, y: 0, duration: 0.42 / n, ease: "power2.out" },
           stageStart
         );
+
+        // On every stage after the first, crossfade to the matching image
+        if (i > 0) {
+          // Fade out previous image
+          if (imageRefs.current[i - 1]) {
+            tl.to(
+              imageRefs.current[i - 1]!,
+              { opacity: 0, duration: fadeDuration, ease: "power1.inOut" },
+              stageStart
+            );
+          }
+          // Fade in current image
+          if (imageRefs.current[i]) {
+            tl.fromTo(
+              imageRefs.current[i]!,
+              { opacity: 0 },
+              { opacity: 1, duration: fadeDuration, ease: "power1.inOut" },
+              stageStart
+            );
+          }
+        }
       });
 
       return () => {
