@@ -1,0 +1,68 @@
+Update the Footer component with these changes:
+
+1. Footer background
+- Do NOT use black.
+- Use the same deep cherry/wine background color as the circled section in my screenshot.
+- Use a subtle radial gradient/vignette so it feels rich, not flat.
+- Suggested background:
+  background:
+    radial-gradient(circle at 50% 30%, rgba(92, 10, 18, 0.85), rgba(24, 0, 4, 1) 70%),
+    #1A0005;
+
+2. Top content alignment
+- The top footer content should NOT be centered.
+- Align the large OLYM wordmark, paragraph, button, and email to the left.
+- Keep the content inside a max-width container.
+- On mobile, it should still be left aligned with padding around 1.5rem.
+- Remove text-align: center from the footer top.
+
+3. Large OLYM wordmark
+- Keep OLYM big and elegant.
+- Position it left aligned.
+- It should still animate on scroll:
+  fade in + rise slightly.
+- Animation should replay every time the footer enters the viewport.
+
+4. Paragraph
+- Left align the message:
+  “For questions, private inquiries, or guidance before applying, contact us directly. Responses are sent as availability opens.”
+- Keep it readable and luxury, not too tiny.
+- Max width around 640px.
+
+5. Contact button
+- Left align the button under the paragraph.
+- Keep text:
+  [ CONTACT US ]
+- Link to /contact.
+
+6. Email
+- Left align under the button.
+- Use:
+  hello@olymskin.com
+- Link to mailto:hello@olymskin.com
+- Keep it gold.
+
+7. Separator lines
+- Make the horizontal divider lines bolder and more visible.
+- Use gold, not gray.
+- Suggested:
+  border-top: 1.5px solid rgba(198, 164, 106, 0.45);
+- Add one strong gold divider between the top contact section and the bottom navigation/legal section.
+- Add another gold divider above the legal row if needed.
+
+8. Bottom navigation section
+- Keep Home, Contact, Founder Circle on the left.
+- Keep Instagram icon on the right across from the links.
+- Use the same Instagram link:
+  https://www.instagram.com/olymskin
+- Keep legal links:
+  Terms of Service
+  Privacy Policy
+- Keep:
+  © OLYM SKIN 2026
+
+Important:
+- The footer should feel warm, deep wine, and premium.
+- No centered layout in the top section.
+- No plain black background.
+- No default yellow browser link styling.
