@@ -56,7 +56,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
       >
         {/* Replace this src with your actual video file, e.g. /videos/hero.mp4 */}
         <source
-          src="https://www.w3schools.com/html/mov_bbb.mp4"
+          src="/images/Video.mov"
           type="video/mp4"
         />
       </video>
@@ -67,7 +67,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to bottom, rgba(10,10,10,0.55) 0%, rgba(10,10,10,0.75) 100%)",
+            "linear-gradient(to bottom, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.45) 100%)",
         }}
       />
 
@@ -95,9 +95,9 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
             fontStyle: "italic",
           }}
         >
-          Firm, hydrated skin—
+         Body Care,
           <br />
-          done right.
+          Rebuilt for Melanin.
         </h1>
 
         <p
@@ -112,7 +112,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
             textTransform: "uppercase",
           }}
         >
-          Deep hydration and barrier repair for melanated skin.
+          Deep hydration. barrier repair. built for melanated skin.
         </p>
 
         <button
@@ -120,7 +120,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           data-testid="button-enter"
           className="olym-btn-gold"
         >
-          Enter
+          Explore
         </button>
       </div>
 

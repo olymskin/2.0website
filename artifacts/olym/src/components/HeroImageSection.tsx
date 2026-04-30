@@ -1,11 +1,36 @@
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
+
 interface HeroImageSectionProps {
-  /* Replace with your image URL — e.g. /images/hero-for-us.jpg */
   imageSrc?: string;
 }
 
 export default function HeroImageSection({ imageSrc }: HeroImageSectionProps) {
+  const textRef = useRef<HTMLHeadingElement | null>(null);
+
   const placeholder =
     "https://images.unsplash.com/photo-1643185540009-fefca91db3be?w=1920&q=80&fit=crop";
+
+  useEffect(() => {
+    if (!textRef.current) return;
+
+    gsap.fromTo(
+      textRef.current,
+      {
+        y: 60,           // starts slightly below
+        opacity: 0,
+        filter: "blur(6px)",
+      },
+      {
+        y: 0,
+        opacity: 1,
+        filter: "blur(0px)",
+        duration: 1.4,
+        ease: "power3.out",
+        delay: 0.4,
+      }
+    );
+  }, []);
 
   return (
     <section
@@ -22,7 +47,7 @@ export default function HeroImageSection({ imageSrc }: HeroImageSectionProps) {
         justifyContent: "flex-start",
       }}
     >
-      {/* Background image — replace imageSrc prop to customize */}
+      {/* Background image */}
       <div
         style={{
           position: "absolute",
@@ -34,7 +59,7 @@ export default function HeroImageSection({ imageSrc }: HeroImageSectionProps) {
         }}
       />
 
-      {/* Dark gradient overlay at bottom */}
+      {/* Dark gradient overlay */}
       <div
         style={{
           position: "absolute",
@@ -52,6 +77,7 @@ export default function HeroImageSection({ imageSrc }: HeroImageSectionProps) {
         }}
       >
         <h2
+          ref={textRef}
           data-testid="text-hero-image-headline"
           style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",

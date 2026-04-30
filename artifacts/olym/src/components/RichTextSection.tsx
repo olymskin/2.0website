@@ -21,12 +21,12 @@ export default function RichTextSection({
       data-testid={testId}
       style={{
         backgroundColor: "#0A0A0A",
-        padding: "clamp(5rem, 12vw, 10rem) 1.5rem",
+        padding: "clamp(3rem, 7vw, 5.5rem) 1.5rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "70vh",
+        minHeight: "auto",
         textAlign: "center",
       }}
     >
@@ -34,9 +34,9 @@ export default function RichTextSection({
       <div
         style={{
           width: "1px",
-          height: "60px",
+          height: "38px",
           background: "linear-gradient(to bottom, transparent, #C6A46A)",
-          marginBottom: "3rem",
+          marginBottom: "2rem",
           opacity: 0.6,
         }}
       />
@@ -50,7 +50,7 @@ export default function RichTextSection({
           letterSpacing: "0.22em",
           color: "#C6A46A",
           textTransform: "uppercase",
-          marginBottom: "2rem",
+          marginBottom: "1.5rem",
         }}
       >
         {title}
@@ -62,11 +62,11 @@ export default function RichTextSection({
           fontFamily: "'Inter', sans-serif",
           fontSize: "clamp(0.9rem, 1.8vw, 1.05rem)",
           fontWeight: 300,
-          lineHeight: 1.85,
+          lineHeight: 1.75,
           letterSpacing: "0.04em",
           color: "#A89C92",
           maxWidth: "540px",
-          marginBottom: "3.5rem",
+          marginBottom: "2.5rem",
         }}
       >
         {body}
@@ -94,9 +94,9 @@ export default function RichTextSection({
       <div
         style={{
           width: "1px",
-          height: "60px",
+          height: "38px",
           background: "linear-gradient(to top, transparent, #C6A46A)",
-          marginTop: "3rem",
+          marginTop: "2rem",
           opacity: 0.6,
         }}
       />

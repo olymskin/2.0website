@@ -1,0 +1,84 @@
+Redo my Footer component to match this exact structure and feel:
+
+Design:
+- Background: pure black / near black (#050505)
+- Text: soft off-white (#E8DED2)
+- Accent gold: #C6A46A
+- Overall feel: luxury, minimal, editorial, similar to Savor’s footer but darker.
+- Mobile-first and responsive.
+- Add generous spacing, but not so much that the footer feels empty.
+
+Footer content and layout:
+
+1. Large OLYM wordmark at the top
+- Text: OLYM
+- Make it large and elegant.
+- Use serif font if available.
+- Letter spacing should feel luxury.
+- Add scroll animation every time the footer enters viewport:
+  - OLYM fades in
+  - rises slightly from below
+  - letters spread subtly or reveal smoothly
+- Use GSAP + ScrollTrigger if already installed in the project.
+- Animation should replay every time it scrolls into view.
+
+2. Message underneath OLYM:
+“For questions, private inquiries, or guidance before applying, contact us directly. Responses are sent as availability opens.”
+
+3. Button under the message:
+- Button text: Contact Us
+- Style it like a luxury text button with brackets:
+  [ Contact Us ]
+- Link it to /contact
+- Hover: gold text or subtle gold underline/border.
+
+4. Contact email in small print:
+hello@olymskin.com
+- Make it gold.
+- Link it using mailto:hello@olymskin.com
+- Keep it smaller than the main message.
+
+5. Navigation links:
+Left column:
+- Home → link to #top or /
+- Contact → link to /contact
+- Founder Circle → link to the Tally application URL
+
+Right side aligned across from the navigation:
+- Instagram icon only
+- Link to: https://www.instagram.com/olymskin
+- Use lucide-react Instagram icon if available. If not, use a simple text fallback: Instagram.
+
+6. Legal row:
+- Terms of Service → link to /terms
+- Privacy Policy → link to /privacy
+- Copyright line: © OLYM SKIN 2026
+
+Spacing:
+- OLYM at top
+- Message directly below with comfortable spacing
+- Button below message
+- Email below button
+- Navigation and Instagram in a two-column row
+- Legal links and copyright at bottom
+
+Important:
+- Do not make the footer sparse.
+- Keep it clean and minimal, but full enough to feel intentional.
+- Do not use yellow default browser link styling.
+- Remove all underlines unless hover.
+- All links should inherit the footer styling.
+
+Also create placeholder pages/routes if they do not exist:
+- /contact
+- /terms
+- /privacy
+
+For Terms of Service page, use simple placeholder copy:
+“Terms of Service for OLYM Skin will be available soon. For questions, contact hello@olymskin.com.”
+
+For Privacy Policy page, use simple placeholder copy:
+“Privacy Policy for OLYM Skin will be available soon. For questions, contact hello@olymskin.com.”
+
+Use this exact Instagram URL:
+https://www.instagram.com/olymskin

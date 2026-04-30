@@ -8,12 +8,12 @@ export default function FinalCTASection() {
       data-testid="section-final-cta"
       style={{
         backgroundColor: "#0A0A0A",
-        padding: "clamp(6rem, 15vw, 12rem) 1.5rem",
+        padding: "clamp(3.5rem, 8vw, 6rem) 1.5rem",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        minHeight: "80vh",
+        minHeight: "auto",
         textAlign: "center",
         position: "relative",
       }}
@@ -24,7 +24,7 @@ export default function FinalCTASection() {
           width: "40px",
           height: "1px",
           background: "#C6A46A",
-          marginBottom: "3.5rem",
+          marginBottom: "2.25rem",
           opacity: 0.5,
         }}
       />
@@ -37,7 +37,7 @@ export default function FinalCTASection() {
           letterSpacing: "0.3em",
           color: "#A89C92",
           textTransform: "uppercase",
-          marginBottom: "1.5rem",
+          marginBottom: "1.25rem",
           opacity: 0.7,
         }}
       >
@@ -54,7 +54,7 @@ export default function FinalCTASection() {
           letterSpacing: "0.02em",
           color: "#F4EFE9",
           fontStyle: "italic",
-          marginBottom: "2rem",
+          marginBottom: "1.75rem",
           maxWidth: "580px",
         }}
       >
@@ -69,7 +69,7 @@ export default function FinalCTASection() {
           display: "flex",
           alignItems: "center",
           gap: "1.5rem",
-          marginBottom: "3.5rem",
+          marginBottom: "2.5rem",
         }}
       >
         <div style={{ width: "60px", height: "1px", background: "#C6A46A", opacity: 0.4 }} />

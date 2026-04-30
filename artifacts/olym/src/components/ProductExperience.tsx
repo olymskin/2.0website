@@ -11,7 +11,6 @@ const rotationFrames = [
 ];
 
 const detailFrames = ["/jar/frame8.png", "/jar/frame9.png"];
-
 const allFrames = [...rotationFrames, ...detailFrames];
 
 function JarImageViewer() {
@@ -75,7 +74,6 @@ function JarImageViewer() {
           ? (prev - 1 + rotationFrames.length) % rotationFrames.length
           : (prev + 1) % rotationFrames.length
       );
-
       lastX.current = x;
     }
   };
@@ -119,35 +117,19 @@ function JarImageViewer() {
       <style>
         {`
           @keyframes olymJarFloat {
-            0% {
-              transform: translateY(0px) scale(1);
-            }
-            50% {
-              transform: translateY(-14px) scale(1.01);
-            }
-            100% {
-              transform: translateY(0px) scale(1);
-            }
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-14px) scale(1.01); }
+            100% { transform: translateY(0px) scale(1); }
           }
 
           @keyframes olymGlowPulse {
-            0% {
-              opacity: 0.65;
-              transform: scale(1);
-            }
-            50% {
-              opacity: 0.95;
-              transform: scale(1.05);
-            }
-            100% {
-              opacity: 0.65;
-              transform: scale(1);
-            }
+            0% { opacity: 0.65; transform: scale(1); }
+            50% { opacity: 0.95; transform: scale(1.05); }
+            100% { opacity: 0.65; transform: scale(1); }
           }
         `}
       </style>
 
-      {/* soft product glow */}
       <div
         style={{
           position: "absolute",
@@ -163,7 +145,6 @@ function JarImageViewer() {
         }}
       />
 
-      {/* soft floating shadow */}
       <div
         style={{
           position: "absolute",
@@ -204,6 +185,7 @@ function JarImageViewer() {
           setFrame(isDetailView ? 0 : rotationFrames.length);
         }}
         style={{
+          display: "none",
           position: "absolute",
           right: "clamp(1rem, 5vw, 3rem)",
           bottom: "1rem",
@@ -243,7 +225,7 @@ export default function ProductExperience() {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
-        padding: "5rem 0 4rem",
+        padding: "5rem 0 4.5rem",
       }}
     >
       <div
@@ -261,14 +243,7 @@ export default function ProductExperience() {
         }}
       />
 
-      <div
-        style={{
-          width: "100%",
-          position: "relative",
-          zIndex: 3,
-        }}
-        data-testid="canvas-product"
-      >
+      <div style={{ width: "100%", position: "relative", zIndex: 3 }} data-testid="canvas-product">
         <JarImageViewer />
       </div>
 
@@ -279,6 +254,7 @@ export default function ProductExperience() {
           marginTop: "1.5rem",
           position: "relative",
           zIndex: 10,
+          maxWidth: "640px",
         }}
       >
         <p
@@ -305,10 +281,29 @@ export default function ProductExperience() {
             letterSpacing: "0.06em",
             color: "#F4EFE9",
             fontStyle: "italic",
+            marginBottom: "1.25rem",
           }}
         >
-          Engineered for performance.
+          Engineered to Perform
         </h2>
+
+        <p
+          data-testid="text-product-description"
+          style={{
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "clamp(0.82rem, 1.7vw, 1rem)",
+            fontWeight: 300,
+            lineHeight: 1.8,
+            letterSpacing: "0.04em",
+            color: "#A89C92",
+            maxWidth: "560px",
+            margin: "0 auto",
+          }}
+        >
+          An advanced body treatment designed for melanated skin — fast-absorbing,
+          barrier-supporting, and made to leave skin supple, smooth, and deeply
+          hydrated without heaviness.
+        </p>
       </div>
     </section>
   );

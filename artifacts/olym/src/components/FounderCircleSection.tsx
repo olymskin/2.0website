@@ -11,13 +11,15 @@ const LINES = [
 ];
 
 interface FounderCircleSectionProps {
-  /* Replace with your image URL — e.g. /images/founder-circle.jpg */
   imageSrc?: string;
 }
 
 export default function FounderCircleSection({ imageSrc }: FounderCircleSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const buttonRef = useRef<HTMLAnchorElement | null>(null);
+
+  const TALLY_URL = "https://tally.so";
 
   const placeholder =
     "https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1920&q=80&fit=crop";
@@ -51,6 +53,15 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
         );
       });
 
+      if (buttonRef.current) {
+        tl.fromTo(
+          buttonRef.current,
+          { opacity: 0, y: 18 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+          0.75
+        );
+      }
+
       return () => {
         ScrollTrigger.getAll().forEach((t) => {
           if (t.vars.trigger === section) t.kill();
@@ -77,7 +88,6 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
         justifyContent: "center",
       }}
     >
-      {/* Background image — replace imageSrc prop to customize */}
       <div
         style={{
           position: "absolute",
@@ -89,7 +99,6 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
         }}
       />
 
-      {/* Dark gradient overlay */}
       <div
         style={{
           position: "absolute",
@@ -99,7 +108,6 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
         }}
       />
 
-      {/* Text */}
       <div
         style={{
           position: "relative",
@@ -109,6 +117,7 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
           maxWidth: "760px",
           display: "flex",
           flexDirection: "column",
+          alignItems: "center",
           gap: "1.2rem",
         }}
       >
@@ -141,6 +150,26 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
             {line}
           </span>
         ))}
+
+        <a
+          ref={buttonRef}
+          href={TALLY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="link-founder-apply"
+          className="olym-btn-gold"
+          style={{
+            textDecoration: "none",
+            display: "inline-block",
+            fontSize: "0.72rem",
+            letterSpacing: "0.22em",
+            padding: "1rem 3rem",
+            marginTop: "2rem",
+            opacity: 0,
+          }}
+        >
+          Apply for access
+        </a>
       </div>
     </section>
   );
