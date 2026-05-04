@@ -11,7 +11,7 @@ import HeroImageSection from "@/components/HeroImageSection";
 import FounderCircleSection from "@/components/FounderCircleSection";
 import FinalCTASection from "@/components/FinalCTASection";
 import Footer from "@/components/Footer";
-import ScrollFadeSection from "@/components/ScrollFadeSection"
+import ScrollFadeSection from "@/components/ScrollFadeSection";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -40,7 +40,7 @@ export default function Home() {
             "Most body care treats dryness like a surface issue.",
             "Melanated skin requires deeper design.",
           ]}
-          imageSrcs={["/images/introshot.png", "/images/neck.png"]}
+          imageSrc="/images/neck.png"
           imagePosition="center"
         />
       </ScrollFadeSection>
@@ -53,12 +53,9 @@ export default function Home() {
             "Without heaviness.",
             "Without hydration that fades.",
             "Without compromise.",
+            "Without waiting for the industry to catch up.",
           ]}
-          imageSrcs={[
-            "/images/firsttransition.png",
-            "/images/secondtransition.png",
-            "/images/lasttransition.png",
-          ]}
+          imageSrc="/images/sideboob.png"
           imagePosition="center 40%"
         />
       </ScrollFadeSection>
@@ -73,9 +70,10 @@ export default function Home() {
           testId="section-story-3"
           lines={[
             "Fewer steps. Deeper results.",
-            "One treatment that does what others can't",
+            "Private release. Available through access only.",
+            "One treatment that does what others can't.",
           ]}
-          imageSrcs={["/images/sideboob.png", "/images/cutesyphoto.png"]}
+          imageSrc="/images/cutesyphoto.png"
           imagePosition="center 60%"
         />
       </ScrollFadeSection>

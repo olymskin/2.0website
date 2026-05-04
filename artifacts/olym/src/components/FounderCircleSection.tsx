@@ -14,7 +14,9 @@ interface FounderCircleSectionProps {
   imageSrc?: string;
 }
 
-export default function FounderCircleSection({ imageSrc }: FounderCircleSectionProps) {
+export default function FounderCircleSection({
+  imageSrc,
+}: FounderCircleSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const buttonRef = useRef<HTMLAnchorElement | null>(null);
@@ -44,12 +46,12 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
 
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
-        const start = i / LINES.length;
+
         tl.fromTo(
           el,
           { opacity: 0, y: 22 },
           { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
-          start
+          i / LINES.length
         );
       });
 
@@ -121,35 +123,37 @@ export default function FounderCircleSection({ imageSrc }: FounderCircleSectionP
           gap: "1.2rem",
         }}
       >
-        {LINES.map((line, i) => (
-          <span
-            key={i}
-            ref={(el) => {
-              lineRefs.current[i] = el;
-            }}
-            data-testid={`text-founder-line-${i}`}
-            style={{
-              display: "block",
-              fontFamily:
-                i === 2
+        {LINES.map((line, i) => {
+          const isStatement = i >= 2;
+
+          return (
+            <span
+              key={i}
+              ref={(el) => {
+                lineRefs.current[i] = el;
+              }}
+              data-testid={`text-founder-line-${i}`}
+              style={{
+                display: "block",
+                fontFamily: isStatement
                   ? "'Cormorant Garamond', Georgia, serif"
                   : "'Inter', sans-serif",
-              fontSize:
-                i === 2
+                fontSize: isStatement
                   ? "clamp(2rem, 4.5vw, 4rem)"
                   : "clamp(0.85rem, 1.6vw, 1rem)",
-              fontWeight: i === 2 ? 300 : 300,
-              lineHeight: 1.45,
-              letterSpacing: i === 2 ? "0.05em" : "0.1em",
-              color: i === 2 ? "#F4EFE9" : "#A89C92",
-              opacity: 0,
-              fontStyle: i === 2 ? "italic" : "normal",
-              textTransform: i === 2 ? "none" : "uppercase",
-            }}
-          >
-            {line}
-          </span>
-        ))}
+                fontWeight: 300,
+                lineHeight: isStatement ? 1.15 : 1.45,
+                letterSpacing: isStatement ? "0.05em" : "0.1em",
+                color: isStatement ? "#F4EFE9" : "#A89C92",
+                opacity: 0,
+                fontStyle: isStatement ? "italic" : "normal",
+                textTransform: isStatement ? "none" : "uppercase",
+              }}
+            >
+              {line}
+            </span>
+          );
+        })}
 
         <a
           ref={buttonRef}

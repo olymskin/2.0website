@@ -19,6 +19,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
         ease: "power3.out",
       });
     }, containerRef);
+
     return () => ctx.revert();
   }, []);
 
@@ -38,7 +39,6 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
         justifyContent: "center",
       }}
     >
-      {/* VIDEO BACKGROUND — replace src with your video file */}
       <video
         autoPlay
         muted
@@ -54,24 +54,18 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           opacity: 0.55,
         }}
       >
-        {/* Replace this src with your actual video file, e.g. /videos/hero.mp4 */}
-        <source
-          src="/images/Video.mov"
-          type="video/mp4"
-        />
+        <source src="/images/Video.mov" type="video/mp4" />
       </video>
 
-      {/* Dark overlay */}
       <div
         style={{
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(to bottom, rgba(10,10,10,0.25) 0%, rgba(10,10,10,0.45) 100%)",
+            "linear-gradient(to bottom, rgba(10,10,10,0.05) 0%, rgba(10,10,10,0.25) 100%)",
         }}
       />
 
-      {/* Text content */}
       <div
         ref={textRef}
         style={{
@@ -95,7 +89,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
             fontStyle: "italic",
           }}
         >
-         Body Care,
+          Body Care,
           <br />
           Rebuilt for Melanin.
         </h1>
@@ -112,7 +106,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
             textTransform: "uppercase",
           }}
         >
-          Deep hydration. barrier repair. built for melanated skin.
+          Private access. Limited release. Built for melanated skin.
         </p>
 
         <button
@@ -120,11 +114,10 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           data-testid="button-enter"
           className="olym-btn-gold"
         >
-          Explore
+          Enter
         </button>
       </div>
 
-      {/* Scroll hint */}
       <div
         style={{
           position: "absolute",

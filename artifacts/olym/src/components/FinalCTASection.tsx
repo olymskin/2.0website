@@ -1,5 +1,4 @@
 export default function FinalCTASection() {
-  /* Replace this URL with your actual Tally form link */
   const TALLY_URL = "https://tally.so";
 
   return (
@@ -18,7 +17,6 @@ export default function FinalCTASection() {
         position: "relative",
       }}
     >
-      {/* Top decorative element */}
       <div
         style={{
           width: "40px",
@@ -63,13 +61,12 @@ export default function FinalCTASection() {
         Founder Circle.
       </h2>
 
-      {/* Gold ornament line */}
       <div
         style={{
           display: "flex",
           alignItems: "center",
           gap: "1.5rem",
-          marginBottom: "2.5rem",
+          marginBottom: "2.25rem",
         }}
       >
         <div style={{ width: "60px", height: "1px", background: "#C6A46A", opacity: 0.4 }} />
@@ -85,7 +82,21 @@ export default function FinalCTASection() {
         <div style={{ width: "60px", height: "1px", background: "#C6A46A", opacity: 0.4 }} />
       </div>
 
-      {/* Apply CTA — links to Tally form */}
+      <p
+        style={{
+          fontFamily: "'Inter', sans-serif",
+          fontSize: "clamp(0.78rem, 1.5vw, 0.9rem)",
+          fontWeight: 300,
+          letterSpacing: "0.12em",
+          color: "#A89C92",
+          textTransform: "uppercase",
+          marginBottom: "2rem",
+          opacity: 0.8,
+        }}
+      >
+        Applications are reviewed privately.
+      </p>
+
       <a
         href={TALLY_URL}
         target="_blank"

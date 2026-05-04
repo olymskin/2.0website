@@ -7,18 +7,14 @@ gsap.registerPlugin(ScrollTrigger);
 const facts = [
   [
     "VISIBLE DEHYDRATION",
-    "Melanated skin reveals dryness sooner — subtle water loss can appear as ashiness, dullness, and uneven tone.",
+    "On deeper skin, even slight dehydration creates micro texture appearing as ashiness, dullness, and uneven tone.",
   ],
   [
     "BARRIER REACTIVITY",
     "Friction, shaving, and environmental stress can make barrier disruption more visible on melanated skin.",
   ],
   [
-    "TEXTURE ALTERS TONE",
-    "On deeper skin, even slight dehydration creates micro-texture that softens light and reduces visible clarity.",
-  ],
-  [
-    "THE MOISTURE TRADEOFF",
+    "IMPROPER FORMULATIONS",
     "Heavy formulas sit. Lighter formulas fade. Neither sustains hydration in a way that preserves appearance.",
   ],
   [
@@ -191,7 +187,7 @@ export default function SkinArchitectureSection() {
             fontWeight: 300,
             letterSpacing: "0.06em",
             color: "#F4EFE9",
-            fontStyle: "italic",
+            fontStyle: "bold",
           }}
         >
           The Biology of Melanated Skin

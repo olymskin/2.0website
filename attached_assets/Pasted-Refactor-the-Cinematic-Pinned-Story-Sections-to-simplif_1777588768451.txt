@@ -1,0 +1,76 @@
+Refactor the Cinematic Pinned Story Sections to simplify the experience and improve scroll behavior.
+
+The current implementation uses multiple images and background transitions tied to scroll progress. Remove that approach entirely.
+
+NEW CORE DIRECTION:
+Each PinnedStorySection must use ONE image only.
+The image should remain fixed and stable while the section is pinned.
+The storytelling should come from the text animation, not image changes.
+
+GOAL EXPERIENCE:
+- A single cinematic image fills the screen
+- As the user scrolls, text lines appear one by one over the image
+- The image never changes during that section
+- The motion feels slow, controlled, and premium
+
+REMOVE COMPLETELY:
+- Any image arrays
+- activeIndex logic for images
+- Scroll-based image switching
+- Background crossfades
+- Any logic that ties image changes to scroll progress
+
+KEEP:
+- GSAP + ScrollTrigger
+- Pinned section behavior
+- Dark gradient overlay for readability
+- Existing layout, typography, and styling
+
+IMPLEMENTATION:
+
+1. Image behavior
+- Each PinnedStorySection should accept a single imageSrc
+- Apply it as a fixed background (or absolutely positioned image)
+- The image should NOT animate or change during scroll
+
+2. Section pinning
+- Use ScrollTrigger to pin the entire section
+- The section remains fixed while the text animation plays
+
+3. Text animation (primary focus)
+- Each line should animate in sequence based on scroll
+- Use a GSAP timeline with scrub: true
+
+Animation style per line:
+- Start: opacity 0, y: 40
+- Animate to: opacity 1, y: 0
+- Hold briefly
+- Then fade to opacity 0.35 (or 0) before next line appears
+
+4. Flow refinement
+- Each new line should appear slightly lower and rise into position
+- This creates a continuous, flowing editorial feel
+- Avoid hard jumps or abrupt transitions
+
+5. Timing
+- Keep animations slow and smooth
+- Avoid fast or overly reactive motion
+- Let the scroll feel like it is “revealing” the text
+
+6. Layering
+- Text should sit above the image with a subtle dark gradient overlay
+- Ensure strong readability but keep it elegant
+
+RESULT:
+Each section should feel like:
+“One cinematic photograph held in place while the story unfolds through text as you scroll.”
+
+Do NOT redesign the section.
+Do NOT change colors, fonts, or layout.
+Only simplify the logic and refocus the animation on text instead of images.
+
+Ensure:
+- No jitter
+- No overlapping triggers
+- No premature transitions
+- Smooth behavior on mobile Safari
