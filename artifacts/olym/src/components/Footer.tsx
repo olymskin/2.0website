@@ -112,12 +112,12 @@ export default function Footer() {
           ref={wordmarkRef}
           data-testid="text-footer-logo"
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "clamp(5rem, 18vw, 14rem)",
-            fontWeight: 400,
-            letterSpacing: "0.15em",
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "clamp(4rem, 16vw, 12rem)",
+            fontWeight: 300,
+            letterSpacing: "0.32em",
             color: "#F5EDE4",
-            lineHeight: 0.9,
+            lineHeight: 1,
             textTransform: "uppercase",
             fontStyle: "normal",
             marginBottom: "clamp(1.8rem, 4vw, 3rem)",
@@ -159,11 +159,10 @@ export default function Footer() {
               letterSpacing: "0.03em",
               color: "rgba(244, 239, 233, 0.55)",
               margin: "0 auto 2.8rem auto",
-              maxWidth: "340px",
+              maxWidth: "380px",
             }}
           >
-            Performance-driven body care designed to support the skin barrier
-            and elevate your everyday.
+            Performance-driven body care, designed to support the skin barrier, refine the look of texture, and elevate your everyday.
           </p>
 
           {/* ── CTA button — no brackets, thin gold border, subtle hover ── */}
