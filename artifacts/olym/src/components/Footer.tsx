@@ -19,56 +19,65 @@ export default function Footer() {
     const content = contentRef.current;
     if (!footer || !wordmark || !content) return;
 
-    const ctx = gsap.context(() => {
-      // ── Enter: opacity + y (plays once on scroll-in, resets on scroll-out)
+    const mm = gsap.matchMedia();
+
+    // ── Full animation for users without reduced-motion preference ──
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      // Wordmark: scrub-based enter — opacity, y, letterSpacing, blur
       gsap.fromTo(
         wordmark,
-        { opacity: 0, y: 48 },
+        {
+          opacity: 0,
+          y: 50,
+          letterSpacing: "0.52em",
+          filter: "blur(4px)",
+        },
         {
           opacity: 1,
           y: 0,
-          duration: 1.8,
-          ease: "power2.out",
+          letterSpacing: "0.32em",
+          filter: "blur(0px)",
+          ease: "none",
           scrollTrigger: {
-            trigger: wordmark,
-            start: "top 88%",
-            toggleActions: "play none none reset",
+            trigger: footer,
+            start: "top 85%",
+            end: "top 35%",
+            scrub: 1,
+            invalidateOnRefresh: true,
           },
         }
       );
 
-      // ── Enter: content block fades in after wordmark
+      // Content block: simple fade-in once wordmark is in view
       gsap.fromTo(
         content,
-        { opacity: 0, y: 28 },
+        { opacity: 0, y: 24 },
         {
           opacity: 1,
           y: 0,
-          duration: 1.4,
+          duration: 1.3,
           ease: "power2.out",
-          delay: 0.2,
           scrollTrigger: {
-            trigger: wordmark,
-            start: "top 88%",
+            trigger: footer,
+            start: "top 65%",
             toggleActions: "play none none reset",
           },
         }
       );
-
-      // ── Exit scrub: wordmark drifts up subtly as user scrolls through footer
-      gsap.to(wordmark, {
-        y: -24,
-        ease: "none",
-        scrollTrigger: {
-          trigger: footer,
-          start: "top bottom",
-          end: "bottom top",
-          scrub: 2,
-        },
-      });
     });
 
-    return () => ctx.revert();
+    // ── Reduced-motion: reveal immediately, no animation ──
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.set(wordmark, {
+        opacity: 1,
+        y: 0,
+        letterSpacing: "0.32em",
+        filter: "none",
+      });
+      gsap.set(content, { opacity: 1, y: 0 });
+    });
+
+    return () => mm.revert();
   }, []);
 
   const thinDivider: React.CSSProperties = {
