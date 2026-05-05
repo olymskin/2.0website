@@ -46,46 +46,48 @@ export default function Header() {
     >
       <div
         style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "flex-start",
           padding: "1.5rem 1.5rem",
-          flexDirection: "column",
-          gap: "0.3rem",
         }}
       >
+        {/* Lockup: width: fit-content keeps the block left-anchored;
+            text-align: center aligns both lines to the same midpoint */}
         <div
-          data-testid="text-logo"
           style={{
-            display: "block",
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.3rem",
             width: "fit-content",
-            marginLeft: "auto",
-            marginRight: "auto",
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(0.7rem, 1.4vw, 0.82rem)",
-            letterSpacing: "0.32em",
-            color: "#F5EDE4",
-            fontWeight: 300,
-            textTransform: "uppercase",
-            lineHeight: 1,
             textAlign: "center",
           }}
         >
-          OLYM SKIN
-        </div>
-        <div
-          data-testid="text-logo-sub"
-          style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(0.52rem, 1vw, 0.6rem)",
-            letterSpacing: "0.32em",
-            color: "#C6A46A",
-            fontWeight: 300,
-            textTransform: "uppercase",
-            lineHeight: 1,
-          }}
-        >
-          FOUNDER CIRCLE
+          <div
+            data-testid="text-logo"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(0.7rem, 1.4vw, 0.82rem)",
+              letterSpacing: "0.32em",
+              color: "#F5EDE4",
+              fontWeight: 300,
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
+            OLYM SKIN
+          </div>
+          <div
+            data-testid="text-logo-sub"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(0.52rem, 1vw, 0.6rem)",
+              letterSpacing: "0.32em",
+              color: "#C6A46A",
+              fontWeight: 300,
+              textTransform: "uppercase",
+              lineHeight: 1,
+            }}
+          >
+            FOUNDER CIRCLE
+          </div>
         </div>
       </div>
     </header>
