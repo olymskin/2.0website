@@ -1,0 +1,77 @@
+Update the OLYM logo/wordmark across the entire website to match the new Founder Circle reference direction.
+
+New logo format:
+- Text should read: OLYM SKIN
+- All uppercase
+- Clean luxury sans-serif, not serif
+- Wide letter spacing/tracking
+- Medium-light weight
+- Use Inter or a similar clean sans-serif already available in the project
+
+Logo color:
+- Use ONE consistent gold tone everywhere:
+  #C6A46A
+- Do NOT switch the logo to white, ivory, black, or deep cherry
+- The logo should always appear gold, regardless of background
+- Over images, keep the logo gold; adjust opacity only if needed, but keep the same color
+
+Brand background color:
+- Use deep cherry:
+  #4A0B12
+- Replace old deep cherry values like #3B070A with #4A0B12 where they are being used as the primary brand background
+- Keep the site feeling deep, rich, and luxury
+
+Replace old logo usage:
+- Replace the current serif “OLYM” wordmark with OLYM SKIN
+- Do not use lowercase olym
+- Do not use large serif logo styling anymore
+- Do not use the old separated serif letter logo
+
+Header:
+- Use gold OLYM SKIN
+- Keep it clean, small, and luxury
+- On mobile, reduce font size or tracking slightly if needed so it fits
+- Do not revert to only OLYM
+
+Footer:
+- Redesign/adjust the footer to match the luxury closing brand panel reference:
+  - Top cropped skin image strip can remain
+  - Large centered gold OLYM SKIN wordmark
+  - Under it, centered uppercase tagline:
+    SCULPTED SKIN. INTENTIONAL CARE.
+  - Under that, smaller centered copy:
+    Performance-driven body care designed to support the skin barrier and elevate your everyday.
+  - One centered outlined button:
+    [ DISCOVER THE FOUNDER CIRCLE ]
+  - Thin divider line
+  - Navigation list:
+    HOME
+    CONTACT
+    FOUNDER CIRCLE
+  - Instagram icon aligned on the right
+  - Bottom row:
+    TERMS OF SERVICE
+    PRIVACY POLICY
+    © OLYM SKIN 2026
+
+Founder Circle areas:
+- Use:
+  OLYM SKIN
+  FOUNDER CIRCLE
+- Both uppercase
+- OLYM SKIN should be gold
+- FOUNDER CIRCLE should also be gold, smaller, and letter-spaced
+
+Remove:
+- Old serif “OLYM” logo
+- White/ivory logo versions
+- Lowercase olym
+- Visible scroll fix v1 marker from the footer UI if no longer needed
+
+Style direction:
+- Clean modern luxury
+- Quiet, editorial, high-end
+- Matches the attached Founder Circle reference images
+- Gold logo on deep cherry #4A0B12
+- Generous spacing
+- Minimal and premium

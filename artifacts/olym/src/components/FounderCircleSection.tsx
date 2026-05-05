@@ -18,6 +18,7 @@ export default function FounderCircleSection({
   imageSrc,
 }: FounderCircleSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
+  const badgeRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const buttonRef = useRef<HTMLAnchorElement | null>(null);
 
@@ -44,14 +45,22 @@ export default function FounderCircleSection({
         },
       });
 
+      if (badgeRef.current) {
+        tl.fromTo(
+          badgeRef.current,
+          { opacity: 0, y: 16 },
+          { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
+          0
+        );
+      }
+
       lineRefs.current.forEach((el, i) => {
         if (!el) return;
-
         tl.fromTo(
           el,
           { opacity: 0, y: 22 },
           { opacity: 1, y: 0, duration: 0.4, ease: "power2.out" },
-          i / LINES.length
+          0.18 + i / LINES.length
         );
       });
 
@@ -60,7 +69,7 @@ export default function FounderCircleSection({
           buttonRef.current,
           { opacity: 0, y: 18 },
           { opacity: 1, y: 0, duration: 0.35, ease: "power2.out" },
-          0.75
+          0.82
         );
       }
 
@@ -106,7 +115,7 @@ export default function FounderCircleSection({
           position: "absolute",
           inset: 0,
           background:
-            "linear-gradient(135deg, rgba(10,10,10,0.78) 0%, rgba(59,10,15,0.6) 100%)",
+            "linear-gradient(135deg, rgba(10,10,10,0.82) 0%, rgba(74,11,18,0.55) 100%)",
         }}
       />
 
@@ -123,6 +132,47 @@ export default function FounderCircleSection({
           gap: "1.2rem",
         }}
       >
+        {/* ── OLYM SKIN / FOUNDER CIRCLE badge ── */}
+        <div
+          ref={badgeRef}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: "0.5rem",
+            marginBottom: "0.8rem",
+            opacity: 0,
+          }}
+        >
+          <span
+            data-testid="text-founder-brand"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(0.75rem, 1.6vw, 0.9rem)",
+              fontWeight: 300,
+              letterSpacing: "0.38em",
+              color: "#C6A46A",
+              textTransform: "uppercase",
+            }}
+          >
+            OLYM SKIN
+          </span>
+          <span
+            data-testid="text-founder-label"
+            style={{
+              fontFamily: "'Inter', sans-serif",
+              fontSize: "clamp(0.55rem, 1.1vw, 0.65rem)",
+              fontWeight: 300,
+              letterSpacing: "0.45em",
+              color: "#C6A46A",
+              textTransform: "uppercase",
+              opacity: 0.75,
+            }}
+          >
+            Founder Circle
+          </span>
+        </div>
+
         {LINES.map((line, i) => {
           const isStatement = i >= 2;
 

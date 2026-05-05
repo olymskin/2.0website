@@ -52,19 +52,18 @@ export default function Header() {
           padding: "1.75rem 1.5rem",
         }}
       >
-        {/* Logo — left-aligned */}
         <div
           data-testid="text-logo"
           style={{
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "1.3rem",
-            letterSpacing: "0.35em",
-            color: "#F4EFE9",
-            fontWeight: 400,
+            fontFamily: "'Inter', sans-serif",
+            fontSize: "clamp(0.7rem, 1.4vw, 0.82rem)",
+            letterSpacing: "0.32em",
+            color: "#C6A46A",
+            fontWeight: 300,
             textTransform: "uppercase",
           }}
         >
-          OLYM
+          OLYM SKIN
         </div>
       </div>
     </header>
