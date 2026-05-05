@@ -93,10 +93,9 @@ export default function Footer() {
       ref={footerRef}
       data-testid="footer"
       style={{
-        background:
-          "linear-gradient(to bottom, #140204 0%, #3D0508 6%, #4A0B12 18%, #4A0B12 100%)",
+        backgroundColor: "#2E0608",
         padding:
-          "clamp(5.5rem, 12vw, 10rem) clamp(1.5rem, 6vw, 4rem) clamp(2.5rem, 4vw, 3.5rem)",
+          "clamp(3rem, 6vw, 5rem) clamp(1.5rem, 6vw, 4rem) clamp(2.5rem, 4vw, 3.5rem)",
       }}
     >
       <div
@@ -118,7 +117,7 @@ export default function Footer() {
             fontSize: "clamp(3rem, 11vw, 8.5rem)",
             fontWeight: 300,
             letterSpacing: "0.4em",
-            color: "#F4EFE9",
+            color: "#F4EDE6",
             lineHeight: 1,
             textTransform: "uppercase",
             marginBottom: "clamp(1.6rem, 3.5vw, 2.6rem)",
