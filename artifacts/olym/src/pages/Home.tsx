@@ -102,9 +102,11 @@ export default function Home() {
         <ProductExperience />
       </ScrollFadeSection>
 
+      {/* 
       <ScrollFadeSection zIndex={15} stickyPin pinBuffer="24vh">
         <HeroImageSection imageSrc="/images/heroimage1.png" />
       </ScrollFadeSection>
+      */}
 
       <ScrollFadeSection zIndex={16} stickyPin pinBuffer="20vh">
         <FinalCTASection />
