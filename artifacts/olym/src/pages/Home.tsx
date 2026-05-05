@@ -27,6 +27,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    console.log("%cOLYM scroll fix v1", "color:#C6A46A;font-weight:bold;font-size:14px");
     const id = setTimeout(() => ScrollTrigger.refresh(), 400);
     return () => clearTimeout(id);
   }, []);

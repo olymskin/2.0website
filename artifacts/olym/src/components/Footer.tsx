@@ -317,19 +317,34 @@ export default function Footer() {
               ))}
             </div>
 
-            <p
-              data-testid="text-footer-copyright"
-              style={{
-                fontFamily: "'Inter', sans-serif",
-                fontSize: "0.62rem",
-                letterSpacing: "0.1em",
-                color: "#C8BAA8",
-                opacity: 0.45,
-                margin: 0,
-              }}
-            >
-              © OLYM SKIN 2026
-            </p>
+            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: "0.25rem" }}>
+              <p
+                data-testid="text-footer-copyright"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "0.62rem",
+                  letterSpacing: "0.1em",
+                  color: "#C8BAA8",
+                  opacity: 0.45,
+                  margin: 0,
+                }}
+              >
+                © OLYM SKIN 2026
+              </p>
+              <p
+                data-testid="text-footer-version"
+                style={{
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "0.55rem",
+                  letterSpacing: "0.08em",
+                  color: "#C6A46A",
+                  opacity: 0.5,
+                  margin: 0,
+                }}
+              >
+                scroll fix v1
+              </p>
+            </div>
           </div>
 
         </div>
