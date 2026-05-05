@@ -98,25 +98,22 @@ export default function Home() {
         />
       </ScrollFadeSection>
 
-      {/* ── ProductExperience hidden — preserved for future use ── */}
-      <div style={{ display: "none" }}>
-        <ScrollFadeSection zIndex={14} stickyPin pinBuffer="22vh">
-          <ProductExperience />
-        </ScrollFadeSection>
-      </div>
+      <ScrollFadeSection zIndex={14} stickyPin pinBuffer="22vh">
+        <ProductExperience />
+      </ScrollFadeSection>
 
       <ScrollFadeSection zIndex={15} stickyPin pinBuffer="24vh">
         <HeroImageSection imageSrc="/images/heroimage1.png" />
       </ScrollFadeSection>
 
-      {/* ── Founder circle — self-pins internally; no ScrollFadeSection ───── */}
-      <div style={{ position: "relative", zIndex: 16 }}>
-        <FounderCircleSection imageSrc="/images/3womenredback.png" />
-      </div>
-
-      <ScrollFadeSection zIndex={17} stickyPin pinBuffer="20vh">
+      <ScrollFadeSection zIndex={16} stickyPin pinBuffer="20vh">
         <FinalCTASection />
       </ScrollFadeSection>
+
+      {/* ── Founder circle — self-pins internally; no ScrollFadeSection ───── */}
+      <div style={{ position: "relative", zIndex: 17 }}>
+        <FounderCircleSection imageSrc="/images/3womenredback.png" />
+      </div>
 
       {/* ── Footer — simple fade-in ────────────────────────────────────────── */}
       <ScrollFadeSection zIndex={18}>
