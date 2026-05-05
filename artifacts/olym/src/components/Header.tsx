@@ -57,6 +57,10 @@ export default function Header() {
         <div
           data-testid="text-logo"
           style={{
+            display: "block",
+            width: "fit-content",
+            marginLeft: "auto",
+            marginRight: "auto",
             fontFamily: "'Inter', sans-serif",
             fontSize: "clamp(0.7rem, 1.4vw, 0.82rem)",
             letterSpacing: "0.32em",
@@ -64,6 +68,7 @@ export default function Header() {
             fontWeight: 300,
             textTransform: "uppercase",
             lineHeight: 1,
+            textAlign: "center",
           }}
         >
           OLYM SKIN
