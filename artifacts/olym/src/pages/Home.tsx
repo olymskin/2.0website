@@ -3,6 +3,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Header from "@/components/Header";
 import HeroVideo from "@/components/HeroVideo";
+import StorySequence from "@/components/StorySequence";
 import PinnedStorySection from "@/components/PinnedStorySection";
 import SkinArchitectureSection from "@/components/SkinArchitectureSection";
 import RichTextSection from "@/components/RichTextSection";
@@ -14,6 +15,10 @@ import Footer from "@/components/Footer";
 import ScrollFadeSection from "@/components/ScrollFadeSection";
 
 gsap.registerPlugin(ScrollTrigger);
+
+// Prevent mobile resize jitter and lag accumulation from hurting scrub smoothness
+ScrollTrigger.config({ ignoreMobileResize: true });
+gsap.ticker.lagSmoothing(0);
 
 export default function Home() {
   const scrollToSection = (id: string) => {
@@ -30,43 +35,47 @@ export default function Home() {
     <main style={{ backgroundColor: "#0A0A0A", overflowX: "hidden" }}>
       <Header />
 
+      {/* 1. Hero — normal scroll */}
       <HeroVideo onEnter={() => scrollToSection("story-1")} />
 
-      <ScrollFadeSection zIndex={10}>
-        <PinnedStorySection
-          id="story-1"
-          testId="section-story-1"
-          lines={[
-            "Most body care treats dryness like a surface issue.",
-            "Melanated skin requires deeper design.",
+      {/* ── Story sequence A: stories 1 + 2 pinned together ──────────────
+          ONE ScrollTrigger covers both panels.
+          No ScrollFadeSection wrapper — it would set opacity:0 on the pin
+          element and fight the GSAP pin/scrub. */}
+      <div id="story-1" style={{ position: "relative", zIndex: 10 }}>
+        <StorySequence
+          panels={[
+            {
+              lines: [
+                "Most body care treats dryness like a surface issue.",
+                "Melanated skin requires deeper design.",
+              ],
+              imageSrc: "/images/neck.png",
+              imagePosition: "center",
+            },
+            {
+              lines: [
+                "Without heaviness.",
+                "Without hydration that fades.",
+                "Without compromise.",
+                "Without waiting for the industry to catch up.",
+              ],
+              imageSrc: "/images/sideboob.png",
+              imagePosition: "center 40%",
+            },
           ]}
-          imageSrc="/images/neck.png"
-          imagePosition="center"
         />
-      </ScrollFadeSection>
+      </div>
 
-      <ScrollFadeSection zIndex={11}>
-        <PinnedStorySection
-          id="story-2"
-          testId="section-story-2"
-          lines={[
-            "Without heaviness.",
-            "Without hydration that fades.",
-            "Without compromise.",
-            "Without waiting for the industry to catch up.",
-          ]}
-          imageSrc="/images/sideboob.png"
-          imagePosition="center 40%"
-        />
-      </ScrollFadeSection>
-
-      <ScrollFadeSection zIndex={12}>
+      {/* ── Skin architecture — self-pins internally; no ScrollFadeSection ── */}
+      <div style={{ position: "relative", zIndex: 11 }}>
         <SkinArchitectureSection />
-      </ScrollFadeSection>
+      </div>
 
-      <ScrollFadeSection zIndex={13}>
+      {/* ── Story 3 — self-pins internally; no ScrollFadeSection ─────────── */}
+      <div id="story-3" style={{ position: "relative", zIndex: 12 }}>
         <PinnedStorySection
-          id="story-3"
+          id="story-3-inner"
           testId="section-story-3"
           lines={[
             "Fewer steps. Deeper results.",
@@ -76,9 +85,10 @@ export default function Home() {
           imageSrc="/images/cutesyphoto.png"
           imagePosition="center 60%"
         />
-      </ScrollFadeSection>
+      </div>
 
-      <ScrollFadeSection zIndex={14} stickyPin pinBuffer="32vh">
+      {/* ── Non-pinned sections: stickyPin creates CSS sticky hold ────────── */}
+      <ScrollFadeSection zIndex={13} stickyPin pinBuffer="32vh">
         <RichTextSection
           title="Firming Barrier Treatment Cream"
           body="Absorbs instantly. Holds deeply. Leaves nothing behind but finish, and supports the skin barrier from within."
@@ -87,23 +97,25 @@ export default function Home() {
         />
       </ScrollFadeSection>
 
-      <ScrollFadeSection zIndex={15} stickyPin pinBuffer="22vh">
+      <ScrollFadeSection zIndex={14} stickyPin pinBuffer="22vh">
         <ProductExperience />
       </ScrollFadeSection>
 
-      <ScrollFadeSection zIndex={16} stickyPin pinBuffer="24vh">
+      <ScrollFadeSection zIndex={15} stickyPin pinBuffer="24vh">
         <HeroImageSection imageSrc="/images/heroimage1.png" />
       </ScrollFadeSection>
 
-      <ScrollFadeSection zIndex={17} stickyPin pinBuffer="20vh">
+      <ScrollFadeSection zIndex={16} stickyPin pinBuffer="20vh">
         <FinalCTASection />
       </ScrollFadeSection>
 
-      <ScrollFadeSection zIndex={18}>
+      {/* ── Founder circle — self-pins internally; no ScrollFadeSection ───── */}
+      <div style={{ position: "relative", zIndex: 17 }}>
         <FounderCircleSection imageSrc="/images/3womenredback.png" />
-      </ScrollFadeSection>
+      </div>
 
-      <ScrollFadeSection zIndex={19}>
+      {/* ── Footer — simple fade-in ────────────────────────────────────────── */}
+      <ScrollFadeSection zIndex={18}>
         <Footer />
       </ScrollFadeSection>
     </main>

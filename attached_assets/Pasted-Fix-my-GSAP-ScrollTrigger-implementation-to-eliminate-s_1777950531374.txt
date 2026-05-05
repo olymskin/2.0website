@@ -1,0 +1,65 @@
+Fix my GSAP ScrollTrigger implementation to eliminate snapping between sections and create smooth, continuous scrolling.
+
+Current issue:
+- Some sections are pinned with ScrollTrigger
+- Between pinned sections, scrolling becomes loose
+- The next section visibly scrolls into view
+- Then it suddenly snaps and pins
+- This creates a broken, non-smooth experience
+
+Goal:
+- Only sections that are part of the same storytelling sequence should be pinned together
+- Each storytelling sequence should feel like ONE continuous locked scroll
+- No visible release → scroll → snap between sections
+- Normal sections should scroll naturally
+
+Instructions:
+
+1. Group only related parallax/story sections:
+   - Create a wrapper .storySequence ONLY around sections that belong together
+   - Do NOT wrap the entire page
+   - Keep product, CTA, and other sections as normal scroll
+
+2. Create a pinned container inside each group:
+   - Add .storyPin inside .storySequence
+   - Move all images and text into .storyPin
+   - Stack them using position: absolute
+
+3. Use ONE ScrollTrigger per group:
+   - Remove ALL individual pin: true triggers from child sections
+   - Replace with a single GSAP timeline
+
+4. ScrollTrigger config:
+   - trigger: ".storySequence"
+   - start: "top top"
+   - end: "bottom bottom"
+   - pin: ".storyPin"
+   - scrub: 1.2
+   - anticipatePin: 1
+   - invalidateOnRefresh: true
+
+5. Control animations inside timeline:
+   - Fade text in/out
+   - Crossfade images
+   - Keep everything inside the pinned container
+   - No layout movement between steps
+
+6. Fix layout issues that cause snapping:
+   - Remove ALL vertical margins between sections
+   - Use padding inside containers instead
+   - Ensure .storySequence has enough height (300–600vh)
+
+7. Prevent scroll “jump” on mobile:
+   - Add: ScrollTrigger.config({ ignoreMobileResize: true })
+   - Add: gsap.ticker.lagSmoothing(0)
+
+8. Ensure smooth handoff between pinned and normal sections:
+   - The next section after .storySequence should sit directly below it (no gaps)
+   - Do NOT apply pinning to the next section
+   - Avoid sudden height changes
+
+End result:
+- Smooth, continuous scroll
+- No snapping or jerky transitions
+- Pinned sections feel intentional and cinematic
+- Normal sections scroll naturally
