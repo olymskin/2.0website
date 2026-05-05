@@ -1,0 +1,112 @@
+Refine the footer design, logo styling, and interactions to match a modern luxury editorial direction.
+
+PRIMARY GOAL:
+The footer should feel like a cinematic closing brand moment — minimal, rich, and high-end.
+
+-----------------------------------
+FOOTER BACKGROUND
+-----------------------------------
+- Match the footer background EXACTLY to the deep cherry tone used in the hero section
+- Sample the hero background color directly and apply it to the footer
+- Replace any existing footer color (including #4A0B12 if different)
+- The transition into the footer should feel seamless (no visible color jump)
+
+-----------------------------------
+LOGO / WORDMARK
+-----------------------------------
+- Use: OLYM SKIN
+- Uppercase
+- Clean luxury sans-serif (Inter or similar already in project)
+- Wide letter spacing (tracking)
+- Medium-light weight
+
+Color rules:
+- Header logo → gold (#C6A46A)
+- Founder Circle sections → gold (#C6A46A)
+- Footer main logo → soft white/ivory (NOT gold)
+
+Footer logo styling:
+- Make the footer OLYM SKIN significantly larger
+- Center it
+- Give it strong presence (hero-level scale)
+- Keep spacing elegant and minimal
+
+Remove:
+- Old serif “OLYM”
+- Lowercase “olym”
+- Any mixed logo styles
+
+-----------------------------------
+FOOTER CONTENT STRUCTURE
+-----------------------------------
+1. Large centered white/ivory OLYM SKIN
+2. Tagline (centered, spaced uppercase):
+   SCULPTED SKIN. INTENTIONAL CARE.
+3. Supporting copy (centered):
+   Performance-driven body care designed to support the skin barrier and elevate your everyday.
+4. Button:
+   DISCOVER THE FOUNDER CIRCLE
+
+-----------------------------------
+BUTTON DESIGN
+-----------------------------------
+- Remove brackets completely
+- Thin gold border (#C6A46A)
+- Transparent background
+- Uppercase text with letter spacing
+- Add subtle hover:
+  - Slight background darkening
+  - No heavy animation
+
+-----------------------------------
+FOOTER NAV
+-----------------------------------
+- Clean minimal layout
+- HOME / CONTACT / FOUNDER CIRCLE
+- Instagram icon aligned right
+- Thin divider lines (subtle gold/ivory, low opacity)
+
+-----------------------------------
+BOTTOM ROW
+-----------------------------------
+- TERMS OF SERVICE
+- PRIVACY POLICY
+- © OLYM SKIN 2026
+
+-----------------------------------
+FOOTER ANIMATION (IMPORTANT)
+-----------------------------------
+Animate the large footer OLYM SKIN wordmark using GSAP:
+
+On enter:
+- opacity: 0 → 1
+- y: 40 → 0
+- letterSpacing: slightly wider → final
+- duration: smooth and slow
+- ease: power2.out or similar
+
+On exit (scrolling past):
+- fade opacity down slightly
+- subtle movement (y ±20)
+- use scrub so it follows scroll naturally
+
+Rules:
+- No bounce
+- No aggressive motion
+- No layout shift
+- Only animate transform, opacity, letter-spacing
+
+-----------------------------------
+GENERAL STYLE
+-----------------------------------
+- Clean, modern luxury
+- Quiet, editorial, high-end
+- Deep cherry background + gold accents + ivory typography
+- Generous spacing
+- Minimal but intentional
+
+-----------------------------------
+CLEANUP
+-----------------------------------
+- Remove visible scroll fix v1 from footer UI
+- Ensure no leftover debug styles
