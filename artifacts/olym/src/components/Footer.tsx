@@ -57,14 +57,13 @@ export default function Footer() {
 
       // ── Exit scrub: wordmark drifts up subtly as user scrolls through footer
       gsap.to(wordmark, {
-        y: -28,
-        opacity: 0.55,
+        y: -24,
         ease: "none",
         scrollTrigger: {
           trigger: footer,
-          start: "center bottom",
+          start: "top bottom",
           end: "bottom top",
-          scrub: 1.8,
+          scrub: 2,
         },
       });
     });
@@ -115,19 +114,19 @@ export default function Footer() {
           style={{
             fontFamily: "'Cormorant Garamond', Georgia, serif",
             fontSize: "clamp(5rem, 18vw, 14rem)",
-            fontWeight: 300,
-            letterSpacing: "0.08em",
+            fontWeight: 400,
+            letterSpacing: "0.15em",
             color: "#F5EDE4",
             lineHeight: 0.9,
-            textTransform: "lowercase",
-            fontStyle: "italic",
+            textTransform: "uppercase",
+            fontStyle: "normal",
             marginBottom: "clamp(1.8rem, 4vw, 3rem)",
             opacity: 0,
             userSelect: "none",
             willChange: "transform, opacity",
           }}
         >
-          olym
+          OLYM
         </div>
 
         {/* ── Content block ── */}
