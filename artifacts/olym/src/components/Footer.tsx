@@ -113,20 +113,21 @@ export default function Footer() {
           ref={wordmarkRef}
           data-testid="text-footer-logo"
           style={{
-            fontFamily: "'Inter', sans-serif",
-            fontSize: "clamp(3rem, 11vw, 8.5rem)",
+            fontFamily: "'Cormorant Garamond', Georgia, serif",
+            fontSize: "clamp(5rem, 18vw, 14rem)",
             fontWeight: 300,
-            letterSpacing: "0.4em",
-            color: "#F4EDE6",
-            lineHeight: 1,
-            textTransform: "uppercase",
-            marginBottom: "clamp(1.6rem, 3.5vw, 2.6rem)",
+            letterSpacing: "0.08em",
+            color: "#F5EDE4",
+            lineHeight: 0.9,
+            textTransform: "lowercase",
+            fontStyle: "italic",
+            marginBottom: "clamp(1.8rem, 4vw, 3rem)",
             opacity: 0,
             userSelect: "none",
             willChange: "transform, opacity",
           }}
         >
-          OLYM SKIN
+          olym
         </div>
 
         {/* ── Content block ── */}
@@ -139,7 +140,7 @@ export default function Footer() {
               fontFamily: "'Inter', sans-serif",
               fontSize: "clamp(0.58rem, 1.1vw, 0.68rem)",
               letterSpacing: "0.3em",
-              color: "#C6A46A",
+              color: "#F5EDE4",
               textTransform: "uppercase",
               margin: "0 0 1.6rem 0",
               opacity: 0.9,
@@ -159,7 +160,7 @@ export default function Footer() {
               letterSpacing: "0.03em",
               color: "rgba(244, 239, 233, 0.55)",
               margin: "0 auto 2.8rem auto",
-              maxWidth: "500px",
+              maxWidth: "340px",
             }}
           >
             Performance-driven body care designed to support the skin barrier
