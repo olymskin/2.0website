@@ -155,14 +155,16 @@ export default function Footer() {
               fontFamily: "'Inter', sans-serif",
               fontSize: "clamp(0.78rem, 1.5vw, 0.88rem)",
               fontWeight: 300,
-              lineHeight: 1.9,
+              lineHeight: 1.55,
               letterSpacing: "0.03em",
               color: "rgba(244, 239, 233, 0.55)",
               margin: "0 auto 2.8rem auto",
-              maxWidth: "380px",
+              maxWidth: "480px",
             }}
           >
-            Performance-driven body care, designed to support the skin barrier, refine the look of texture, and elevate your everyday.
+            Performance-driven body care, designed to support<br />
+            the skin barrier, refine the look of texture,<br />
+            and elevate your everyday.
           </p>
 
           {/* ── CTA button — no brackets, thin gold border, subtle hover ── */}
