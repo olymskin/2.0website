@@ -52,6 +52,7 @@ export default function Home() {
                 "Melanated skin requires deeper design.",
               ],
               imageSrc: "/images/neck.png",
+              desktopImageSrc: "/desktop/desktopimage1.png",
               imagePosition: "center",
             },
             {
@@ -62,6 +63,7 @@ export default function Home() {
                 "Without waiting for the industry to catch up.",
               ],
               imageSrc: "/images/sideboob.png",
+              desktopImageSrc: "/desktop/desktopimage2.png",
               imagePosition: "center 40%",
             },
           ]}

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
@@ -8,6 +8,7 @@ export interface StoryPanel {
   id?: string;
   lines: string[];
   imageSrc: string;
+  desktopImageSrc?: string;
   imagePosition?: string;
 }
 
@@ -23,6 +24,19 @@ interface Props {
 export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
   const sequenceRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
+
+  // Resolve at first render so only the matching asset URL is ever injected
+  // into the style — the browser will never request the other file.
+  const [isDesktop, setIsDesktop] = useState<boolean>(
+    () => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -182,23 +196,31 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
           justifyContent: "center",
         }}
       >
-        {/* One background div per panel, stacked — crossfaded by GSAP */}
-        {panels.map((panel, i) => (
-          <div
-            key={i}
-            ref={(el) => {
-              imageRefs.current[i] = el;
-            }}
-            style={{
-              position: "absolute",
-              inset: 0,
-              backgroundImage: `url(${panel.imageSrc})`,
-              backgroundSize: "cover",
-              backgroundPosition: panel.imagePosition ?? "center",
-              backgroundRepeat: "no-repeat",
-            }}
-          />
-        ))}
+        {/* One background div per panel, stacked — crossfaded by GSAP.
+            Active image URL is chosen at render time so the browser never
+            fetches the non-matching asset. */}
+        {panels.map((panel, i) => {
+          const activeSrc =
+            isDesktop && panel.desktopImageSrc
+              ? panel.desktopImageSrc
+              : panel.imageSrc;
+          return (
+            <div
+              key={i}
+              ref={(el) => {
+                imageRefs.current[i] = el;
+              }}
+              style={{
+                position: "absolute",
+                inset: 0,
+                backgroundImage: `url(${activeSrc})`,
+                backgroundSize: "cover",
+                backgroundPosition: panel.imagePosition ?? "center",
+                backgroundRepeat: "no-repeat",
+              }}
+            />
+          );
+        })}
 
         {/* Dark cinematic overlay */}
         <div
