@@ -98,7 +98,7 @@ export default function FinalCTASection() {
       </p>
 
       <a
-        href={https://circle.olymskin.com/}
+        href={"https://circle.olymskin.com/"}
         target="_blank"
         rel="noopener noreferrer"
         data-testid="link-apply-cta"

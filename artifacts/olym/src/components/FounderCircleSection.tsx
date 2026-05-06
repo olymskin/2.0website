@@ -156,7 +156,7 @@ export default function FounderCircleSection({
 
         <a
           ref={buttonRef}
-          href={https://circle.olymskin.com/}
+          href={"https://circle.olymskin.com/"}
           target="_blank"
           rel="noopener noreferrer"
           data-testid="link-founder-apply"

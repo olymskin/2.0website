@@ -179,7 +179,7 @@ export default function Footer() {
           {/* ── CTA button — no brackets, thin gold border, subtle hover ── */}
           <div style={{ marginBottom: "clamp(3.5rem, 7vw, 6rem)" }}>
             <a
-              href={https://circle.olymskin.com/}
+              href="https://circle.olymskin.com/"
               target="_blank"
               rel="noopener noreferrer"
               data-testid="link-footer-cta"
