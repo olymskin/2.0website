@@ -6,7 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const TALLY_URL = "https://tally.so";
+const TALLY_URL = "https://circle.olymskin.com/";
 
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
@@ -179,7 +179,7 @@ export default function Footer() {
           {/* ── CTA button — no brackets, thin gold border, subtle hover ── */}
           <div style={{ marginBottom: "clamp(3.5rem, 7vw, 6rem)" }}>
             <a
-              href={TALLY_URL}
+              href={https://circle.olymskin.com/}
               target="_blank"
               rel="noopener noreferrer"
               data-testid="link-footer-cta"
