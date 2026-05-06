@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 
 interface HeroVideoProps {
@@ -8,6 +8,19 @@ interface HeroVideoProps {
 export default function HeroVideo({ onEnter }: HeroVideoProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+
+  // Initialise from matchMedia so the correct video is chosen on first render,
+  // preventing the wrong asset from ever being requested by the browser.
+  const [isDesktop, setIsDesktop] = useState<boolean>(
+    () => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
+  );
+
+  useEffect(() => {
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const handler = (e: MediaQueryListEvent) => setIsDesktop(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -39,23 +52,49 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
         justifyContent: "center",
       }}
     >
-      <video
-        autoPlay
-        muted
-        loop
-        playsInline
-        data-testid="video-hero"
-        style={{
-          position: "absolute",
-          inset: 0,
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          opacity: 0.55,
-        }}
-      >
-        <source src="/images/Video.mov" type="video/mp4" />
-      </video>
+      {isDesktop ? (
+        <video
+          key="desktop"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          data-testid="video-hero"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center center",
+            opacity: 0.55,
+          }}
+        >
+          <source src="/desktop/herovideodesktop.mp4" type="video/mp4" />
+        </video>
+      ) : (
+        <video
+          key="mobile"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          data-testid="video-hero"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center center",
+            opacity: 0.55,
+          }}
+        >
+          <source src="/images/Video.mov" type="video/mp4" />
+        </video>
+      )}
 
       <div
         style={{
