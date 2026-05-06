@@ -290,6 +290,33 @@
   text-indent: 0.45em;
 }
 
+/* ── Loading screen images ───────────────────────────────────────────────── */
+.olym-loader__image {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  object-position: center center;
+}
+
+/* Mobile image: visible by default, hidden on desktop */
+.olym-loader__image--mobile {
+  display: block;
+}
+.olym-loader__image--desktop {
+  display: none;
+}
+
+@media (min-width: 1024px) {
+  .olym-loader__image--mobile {
+    display: none;
+  }
+  .olym-loader__image--desktop {
+    display: block;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   * {
     animation-duration: 0.01ms !important;

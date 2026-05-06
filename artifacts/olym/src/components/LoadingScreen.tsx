@@ -40,9 +40,16 @@ export default function LoadingScreen() {
       }}
       aria-hidden="true"
     >
+      {/* Mobile loading image — hidden on desktop */}
       <img
         src="/loadingscreen.png"
-        className="olym-loader__image"
+        className="olym-loader__image olym-loader__image--mobile"
+        alt=""
+      />
+      {/* Desktop loading image — hidden on mobile */}
+      <img
+        src="/desktop/loadingscreendesktop.png"
+        className="olym-loader__image olym-loader__image--desktop"
         alt=""
       />
     </div>
