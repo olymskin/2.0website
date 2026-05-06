@@ -21,7 +21,7 @@ export default function FounderCircleSection({
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const buttonRef = useRef<HTMLAnchorElement | null>(null);
 
-  const TALLY_URL = "https://tally.so";
+  const TALLY_URL = "https://circle.olymskin.com/";
 
   const placeholder =
     "https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1920&q=80&fit=crop";
@@ -156,7 +156,7 @@ export default function FounderCircleSection({
 
         <a
           ref={buttonRef}
-          href={TALLY_URL}
+          href={https://circle.olymskin.com/}
           target="_blank"
           rel="noopener noreferrer"
           data-testid="link-founder-apply"

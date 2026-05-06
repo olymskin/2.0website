@@ -1,5 +1,5 @@
 export default function FinalCTASection() {
-  const TALLY_URL = "https://tally.so";
+  const TALLY_URL = "https://circle.olymskin.com/";
 
   return (
     <section
@@ -98,7 +98,7 @@ export default function FinalCTASection() {
       </p>
 
       <a
-        href={TALLY_URL}
+        href={https://circle.olymskin.com/}
         target="_blank"
         rel="noopener noreferrer"
         data-testid="link-apply-cta"
