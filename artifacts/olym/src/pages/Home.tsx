@@ -45,6 +45,7 @@ export default function Home() {
           element and fight the GSAP pin/scrub. */}
       <div id="story-1" style={{ position: "relative", zIndex: 10 }}>
         <StorySequence
+          oneAtATime
           panels={[
             {
               lines: [

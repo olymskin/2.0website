@@ -19,9 +19,15 @@ interface Props {
    * e.g. 58 means each story beat consumes 58vh of scroll distance.
    */
   vhPerLine?: number;
+  /**
+   * When true, only one line is visible at a time — previous lines fade fully
+   * to opacity 0 before the next appears, giving a clean cinematic sequence.
+   * When false (default) previous lines dim to 0.18 and remain faintly visible.
+   */
+  oneAtATime?: boolean;
 }
 
-export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
+export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = false }: Props) {
   const sequenceRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
 
@@ -92,14 +98,17 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
 
       // ── Animate each line and its matching image ─────────────────────────
       // Each line gets 1 "unit" of timeline time.
-      // At line i's stage: fade text in, optionally crossfade image.
-      // Before line i+1: dim line i.
+      // oneAtATime: previous lines fade fully to 0 for a clean one-at-a-time feel.
+      // Default: previous lines dim to 0.18 (faintly visible stack).
+      const dimOpacity = oneAtATime ? 0 : 0.18;
+      const dimY = oneAtATime ? 0 : -14;
+
       allLines.forEach(({ panelIdx, isFirstInPanel }, i) => {
-        const stageStart = i;        // absolute timeline second
+        const stageStart = i;
         const fadeIn = 0.38;
         const hold = 0.30;
         const dimStart = stageStart + fadeIn + hold;
-        const dimDuration = 0.32;
+        const dimDuration = oneAtATime ? 0.28 : 0.32;
         const isLastLine = i === totalLines - 1;
 
         const lineEl = lineRefs.current[i];
@@ -112,13 +121,13 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
           stageStart
         );
 
-        // Dim previous line just before this one fades in
+        // Fade/dim previous line just before this one fades in
         if (i > 0) {
           const prev = lineRefs.current[i - 1];
           if (prev) {
             tl.to(
               prev,
-              { opacity: 0.18, y: -14, duration: 0.28, ease: "power2.in" },
+              { opacity: dimOpacity, y: dimY, duration: 0.28, ease: "power2.in" },
               stageStart - 0.1
             );
           }
@@ -128,7 +137,7 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
         if (!isLastLine) {
           tl.to(
             lineEl,
-            { opacity: 0.18, y: -14, duration: dimDuration, ease: "power2.in" },
+            { opacity: dimOpacity, y: dimY, duration: dimDuration, ease: "power2.in" },
             dimStart
           );
         }
@@ -172,7 +181,7 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
     });
 
     return () => mm.revert();
-  }, [totalLines]);
+  }, [totalLines, oneAtATime]);
 
   // Scroll container height: totalLines × vhPerLine gives the scroll travel,
   // plus 100vh so the pin ends exactly at the viewport bottom.
