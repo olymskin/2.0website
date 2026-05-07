@@ -184,19 +184,13 @@ export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = fal
   }, [totalLines, oneAtATime]);
 
   // Scroll container height: totalLines × vhPerLine gives the scroll travel,
-  // plus 100dvh so the pin ends exactly at the viewport bottom.
-  // dvh matches the pinRef height unit — on iOS Safari dvh > vh, so mixing
-  // units caused GSAP's pinSpacer to overflow the container and create a
-  // black gap below the section on mobile. Consistent dvh eliminates the mismatch.
-  const seqHeight = `${totalLines * vhPerLine + 100}dvh`;
+  // plus 100vh so the pin ends exactly at the viewport bottom.
+  const seqHeight = `${totalLines * vhPerLine + 100}vh`;
 
   return (
     <div
       ref={sequenceRef}
-      style={{
-        position: "relative",
-        height: seqHeight,
-      }}
+      style={{ position: "relative", height: seqHeight }}
     >
       {/* ── Pinned visual stage ─────────────────────────────────────────── */}
       <div
