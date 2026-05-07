@@ -81,13 +81,6 @@ export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = fal
           end: "bottom bottom",
           scrub: 1.2,
           pin: pin,
-          // pinSpacing: false — the outer sequenceRef already has an explicit
-          // height (seqHeight in vh units) that provides the full scroll travel.
-          // GSAP's default pinSpacer uses the pinRef's 100dvh height, which on
-          // iOS mobile is taller than 100vh, making the spacer overflow seqHeight
-          // and leaving a large black gap below the section on mobile.
-          // With pinSpacing:false, no spacer is injected; seqHeight handles it.
-          pinSpacing: false,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
@@ -197,13 +190,21 @@ export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = fal
   return (
     <div
       ref={sequenceRef}
-      style={{ position: "relative", height: seqHeight }}
+      style={{
+        position: "relative",
+        height: seqHeight,
+        // overflow:hidden clips the GSAP pinSpacer's padding-bottom on iOS
+        // mobile, where 100dvh > 100vh causing the spacer to overflow seqHeight
+        // (which uses vh). The pinned element is position:fixed during animation
+        // so it is never visually clipped — only the invisible spacer overflow is.
+        overflow: "hidden",
+      }}
     >
       {/* ── Pinned visual stage ─────────────────────────────────────────── */}
       <div
         ref={pinRef}
         style={{
-          height: "100vh",
+          height: "100dvh",
           minHeight: "600px",
           overflow: "hidden",
           position: "relative",
