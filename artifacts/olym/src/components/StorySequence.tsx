@@ -9,7 +9,10 @@ export interface StoryPanel {
   lines: string[];
   imageSrc: string;
   desktopImageSrc?: string;
+  /** object-position used on all viewports (and desktop always uses this). */
   imagePosition?: string;
+  /** Overrides imagePosition on mobile (< 1024px) only. Desktop ignores this. */
+  mobileImagePosition?: string;
 }
 
 interface Props {
@@ -249,7 +252,10 @@ export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = fal
                   width: "100%",
                   height: "100%",
                   objectFit: "cover",
-                  objectPosition: panel.imagePosition ?? "center center",
+                  objectPosition:
+                    !isDesktop && panel.mobileImagePosition
+                      ? panel.mobileImagePosition
+                      : (panel.imagePosition ?? "center center"),
                 }}
               />
             </div>

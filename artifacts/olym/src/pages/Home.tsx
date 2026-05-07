@@ -55,6 +55,7 @@ export default function Home() {
               imageSrc: "/images/neck.png",
               desktopImageSrc: "/desktop/desktopimage1.png",
               imagePosition: "center",
+              mobileImagePosition: "center 35%",
             },
             {
               lines: [
