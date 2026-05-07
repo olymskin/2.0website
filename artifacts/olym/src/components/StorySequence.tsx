@@ -198,7 +198,9 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
       >
         {/* One background div per panel, stacked — crossfaded by GSAP.
             Active image URL is chosen at render time so the browser never
-            fetches the non-matching asset. */}
+            fetches the non-matching asset.
+            backgroundColor fallback ensures the section is never solid black
+            while the background image is still loading. */}
         {panels.map((panel, i) => {
           const activeSrc =
             isDesktop && panel.desktopImageSrc
@@ -213,6 +215,7 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
               style={{
                 position: "absolute",
                 inset: 0,
+                backgroundColor: "#1a0204",
                 backgroundImage: `url(${activeSrc})`,
                 backgroundSize: "cover",
                 backgroundPosition: panel.imagePosition ?? "center",

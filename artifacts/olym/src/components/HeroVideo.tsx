@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import gsap from "gsap";
 
 interface HeroVideoProps {
@@ -8,9 +8,8 @@ interface HeroVideoProps {
 export default function HeroVideo({ onEnter }: HeroVideoProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const textRef = useRef<HTMLDivElement>(null);
+  const heroReadyFiredRef = useRef(false);
 
-  // Initialise from matchMedia so the correct video is chosen on first render,
-  // preventing the wrong asset from ever being requested by the browser.
   const [isDesktop, setIsDesktop] = useState<boolean>(
     () => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
   );
@@ -22,6 +21,21 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
     return () => mq.removeEventListener("change", handler);
   }, []);
 
+  // Signal to LoadingScreen that the hero is ready to be revealed.
+  // Called either when the video can play or after a timeout fallback.
+  const signalHeroReady = useCallback(() => {
+    if (heroReadyFiredRef.current) return;
+    heroReadyFiredRef.current = true;
+    window.dispatchEvent(new Event("olym:hero-ready"));
+  }, []);
+
+  useEffect(() => {
+    // Fallback: if video never fires canplay, unblock the loader after 3s
+    const fallback = window.setTimeout(signalHeroReady, 3000);
+    return () => clearTimeout(fallback);
+  }, [signalHeroReady]);
+
+  // Start text animation — kept separate so it runs regardless of video state
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.from(textRef.current, {
@@ -35,6 +49,16 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
 
     return () => ctx.revert();
   }, []);
+
+  const videoStyle: React.CSSProperties = {
+    position: "absolute",
+    inset: 0,
+    width: "100%",
+    height: "100%",
+    objectFit: "cover",
+    objectPosition: "center center",
+    opacity: 0.55,
+  };
 
   return (
     <section
@@ -50,6 +74,8 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
+        // Fallback so the section is never blank black while video buffers
+        backgroundColor: "#1a0204",
       }}
     >
       {isDesktop ? (
@@ -62,15 +88,9 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           preload="auto"
           poster="/desktop/desktopimage1.png"
           data-testid="video-hero"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center center",
-            opacity: 0.55,
-          }}
+          style={videoStyle}
+          onCanPlay={signalHeroReady}
+          onError={signalHeroReady}
         >
           <source src="/desktop/herovideodesktop.mp4" type="video/mp4" />
         </video>
@@ -83,15 +103,9 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           playsInline
           preload="auto"
           data-testid="video-hero"
-          style={{
-            position: "absolute",
-            inset: 0,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover",
-            objectPosition: "center center",
-            opacity: 0.55,
-          }}
+          style={videoStyle}
+          onCanPlay={signalHeroReady}
+          onError={signalHeroReady}
         >
           <source src="/images/Video.mov" type="video/mp4" />
         </video>
