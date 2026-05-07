@@ -209,7 +209,11 @@ export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = fal
             Active image URL is chosen at render time so the browser never
             fetches the non-matching asset.
             backgroundColor fallback ensures the section is never solid black
-            while the background image is still loading. */}
+            while the background image is still loading.
+            <img> is used (instead of background-image) so we can fire
+            ScrollTrigger.refresh() on mobile after the first image loads —
+            background-image provides no onLoad hook. Desktop visuals are
+            identical: object-fit:cover matches background-size:cover. */}
         {panels.map((panel, i) => {
           const activeSrc =
             isDesktop && panel.desktopImageSrc
@@ -225,12 +229,30 @@ export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = fal
                 position: "absolute",
                 inset: 0,
                 backgroundColor: "#1a0204",
-                backgroundImage: `url(${activeSrc})`,
-                backgroundSize: "cover",
-                backgroundPosition: panel.imagePosition ?? "center",
-                backgroundRepeat: "no-repeat",
               }}
-            />
+            >
+              <img
+                src={activeSrc}
+                alt=""
+                aria-hidden="true"
+                onLoad={
+                  i === 0
+                    ? () => {
+                        if (!isDesktop) ScrollTrigger.refresh();
+                      }
+                    : undefined
+                }
+                style={{
+                  position: "absolute",
+                  inset: 0,
+                  display: "block",
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  objectPosition: panel.imagePosition ?? "center center",
+                }}
+              />
+            </div>
           );
         })}
 
