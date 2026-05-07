@@ -60,6 +60,7 @@ export default function HeroVideo({ onEnter }: HeroVideoProps) {
           loop
           playsInline
           preload="auto"
+          poster="/desktop/desktopimage1.png"
           data-testid="video-hero"
           style={{
             position: "absolute",

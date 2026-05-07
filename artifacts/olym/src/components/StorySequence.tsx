@@ -234,14 +234,19 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
           }}
         />
 
-        {/* All text lines stacked in the centre */}
+        {/* All text lines stacked in the centre.
+            maxHeight + overflow:hidden prevents stacked invisible lines from
+            pushing the flex container taller than the viewport on desktop,
+            which would cause the flex centering to push visible lines out of frame. */}
         <div
           style={{
             position: "relative",
             zIndex: 10,
             textAlign: "center",
-            padding: "0 1.5rem",
+            padding: "4vh 1.5rem",
             maxWidth: "980px",
+            maxHeight: "calc(100dvh - 4rem)",
+            overflow: "hidden",
           }}
         >
           {allLines.map(({ text }, i) => (
@@ -260,7 +265,7 @@ export default function StorySequence({ panels, vhPerLine = 58 }: Props) {
                 style={{
                   display: "block",
                   fontFamily: "'Cormorant Garamond', Georgia, serif",
-                  fontSize: "clamp(2rem, 5.5vw, 5rem)",
+                  fontSize: "clamp(2rem, 5.5vw, 3.2rem)",
                   fontWeight: 300,
                   lineHeight: 1.12,
                   letterSpacing: "0.01em",

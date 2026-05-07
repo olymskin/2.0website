@@ -31,6 +31,12 @@
     <meta name="twitter:description" content="Performance-driven body care designed for melanated skin. Deep hydration, barrier repair, and refined texture without heaviness." />
     <meta name="twitter:image" content="https://olymskin.com/og-image.jpg" />
 
+    <!-- Preload desktop-only assets.
+         The media attribute prevents mobile from ever fetching these files. -->
+    <link rel="preload" as="image" href="/desktop/loadingscreendesktop.png" media="(min-width: 1024px)" />
+    <link rel="preload" as="image" href="/desktop/desktopimage1.png" media="(min-width: 1024px)" />
+    <link rel="preload" as="image" href="/desktop/desktopimage2.png" media="(min-width: 1024px)" />
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
