@@ -170,7 +170,7 @@ export default function SkinArchitectureSection() {
         ref={headingRef}
         style={{
           position: "absolute",
-          top: "clamp(5.5rem, 11vh, 8rem)",
+          top: "clamp(5rem, 8vh, 7rem)",
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 6,
@@ -199,9 +199,11 @@ export default function SkinArchitectureSection() {
         style={{
           position: "absolute",
           left: "50%",
-          top: "47%",
+          top: "50%",
           zIndex: 2,
-          width: "min(82vw, 980px)",
+          /* Mobile: ~300px (80vw at 375px). Tablet: ~55vw. Desktop: capped at 580px.
+             Down from 980px — gives the visualization room to breathe on wide screens. */
+          width: "clamp(280px, 55vw, 580px)",
           transform: "translate(-50%, -50%)",
           perspective: "1200px",
           willChange: "transform",
