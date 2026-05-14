@@ -91,17 +91,9 @@ export default function SkinArchitectureSection() {
         },
       });
 
-      if (path) {
-        tl.to(
-          path,
-          {
-            strokeDashoffset: 0,
-            duration: scenes.length * 1.2,
-            ease: "none",
-          },
-          0
-        );
-      }
+      // Path draws in segments — one segment per scene, in sync with each reveal.
+      // No global path animation; the line guides the reader through each beat.
+      const totalScenes = scenes.length;
 
       scenes.forEach((_, i) => {
         const scene = sceneRefs.current[i];
@@ -109,20 +101,27 @@ export default function SkinArchitectureSection() {
 
         if (!scene) return;
 
-        // Background crossfade runs in parallel with the scene reveal
+        // How far the path should be drawn by the end of this scene's reveal
+        const nextOffset = pathLength - pathLength * ((i + 1) / totalScenes);
+
+        // Crossfade backgrounds: fade all out, then fade this one in
         if (bg) {
-          tl.to(bg, { opacity: 1, duration: 0.7, ease: "power1.inOut" }, "<");
+          tl.to(bgRefs.current, { opacity: 0, duration: 0.35, ease: "power1.inOut" });
+          tl.to(bg, { opacity: 1, duration: 0.55, ease: "power1.inOut" }, "<");
         }
 
-        // 1. Fade in
-        tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" });
+        // 1. Fade scene in — path draws in sync
+        tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.65, ease: "power2.out" });
+        if (path) {
+          tl.to(path, { strokeDashoffset: nextOffset, duration: 0.65, ease: "power1.inOut" }, "<");
+        }
 
         // 2. Hold
-        tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.85, ease: "none" });
+        tl.to(scene, { autoAlpha: 1, y: 0, duration: 1.35, ease: "none" });
 
-        // 3. Fade out — then the next iteration starts fresh from the playhead
+        // 3. Fade out before next scene (not on the last scene)
         if (i !== scenes.length - 1) {
-          tl.to(scene, { autoAlpha: 0, y: -24, duration: 0.45, ease: "power2.inOut" });
+          tl.to(scene, { autoAlpha: 0, y: -24, duration: 0.55, ease: "power2.inOut" });
         }
       });
 
