@@ -106,49 +106,23 @@ export default function SkinArchitectureSection() {
       scenes.forEach((_, i) => {
         const scene = sceneRefs.current[i];
         const bg = bgRefs.current[i];
-        const prevScene = sceneRefs.current[i - 1];
 
         if (!scene) return;
 
-        const start = i * 2;
-
-        // Fade background in for this scene
+        // Background crossfade runs in parallel with the scene reveal
         if (bg) {
-          tl.to(
-            bg,
-            { opacity: 1, duration: 0.7, ease: "power1.inOut" },
-            start
-          );
+          tl.to(bg, { opacity: 1, duration: 0.7, ease: "power1.inOut" }, "<");
         }
 
-        // Fade previous scene out just before this one enters —
-        // ensures only ONE scene is ever visible at a time.
-        if (prevScene) {
-          tl.to(
-            prevScene,
-            { autoAlpha: 0, y: -24, duration: 0.35, ease: "power2.inOut" },
-            start - 0.15
-          );
-        }
+        // 1. Fade in
+        tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" });
 
-        // Reveal this scene
-        tl.to(
-          scene,
-          { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" },
-          start
-        );
-
-        // Hold
+        // 2. Hold
         tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.85, ease: "none" });
 
-        // Fade out (all but the final scene)
+        // 3. Fade out — then the next iteration starts fresh from the playhead
         if (i !== scenes.length - 1) {
-          tl.to(scene, {
-            autoAlpha: 0,
-            y: -24,
-            duration: 0.45,
-            ease: "power2.inOut",
-          });
+          tl.to(scene, { autoAlpha: 0, y: -24, duration: 0.45, ease: "power2.inOut" });
         }
       });
 
