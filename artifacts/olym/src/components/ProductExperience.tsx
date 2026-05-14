@@ -95,7 +95,7 @@ function JarImageViewer() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        touchAction: "none",
+        touchAction: "pan-y pinch-zoom",
         cursor: isDragging ? "grabbing" : "grab",
         userSelect: "none",
         WebkitUserSelect: "none",

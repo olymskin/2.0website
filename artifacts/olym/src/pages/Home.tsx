@@ -12,13 +12,11 @@ import HeroImageSection from "@/components/HeroImageSection";
 import FounderCircleSection from "@/components/FounderCircleSection";
 import FinalCTASection from "@/components/FinalCTASection";
 import Footer from "@/components/Footer";
-import ScrollFadeSection from "@/components/ScrollFadeSection";
-
 gsap.registerPlugin(ScrollTrigger);
 
 // Prevent mobile resize jitter and lag accumulation from hurting scrub smoothness
 ScrollTrigger.config({ ignoreMobileResize: true });
-gsap.ticker.lagSmoothing(0);
+gsap.ticker.lagSmoothing(500, 33);
 
 export default function Home() {
   const scrollToSection = (id: string) => {
@@ -106,39 +104,39 @@ export default function Home() {
         />
       </div>
 
-      {/* ── Non-pinned sections: stickyPin creates CSS sticky hold ────────── */}
-      <ScrollFadeSection zIndex={13} stickyPin pinBuffer="32vh">
+      {/* ── Non-pinned sections: plain wrappers while debugging mobile scroll ── */}
+      <div style={{ position: "relative", zIndex: 13 }}>
         <RichTextSection
           title="Firming Barrier Treatment Cream"
           body="Absorbs instantly. Holds deeply. Leaves nothing behind but finish, and supports the skin barrier from within."
           ctaLabel="Discover the Treatment"
           onCta={() => scrollToSection("product")}
         />
-      </ScrollFadeSection>
+      </div>
 
-      <ScrollFadeSection zIndex={14} stickyPin pinBuffer="22vh">
+      <div style={{ position: "relative", zIndex: 14 }}>
         <ProductExperience />
-      </ScrollFadeSection>
+      </div>
 
       {/* 
-      <ScrollFadeSection zIndex={15} stickyPin pinBuffer="24vh">
+      <div style={{ position: "relative", zIndex: 15 }}>
         <HeroImageSection imageSrc="/images/heroimage1.png" />
-      </ScrollFadeSection>
+      </div>
       */}
 
-      <ScrollFadeSection zIndex={16} stickyPin pinBuffer="20vh">
+      <div style={{ position: "relative", zIndex: 16 }}>
         <FinalCTASection />
-      </ScrollFadeSection>
+      </div>
 
-      {/* ── Founder circle — self-pins internally; no ScrollFadeSection ───── */}
+      {/* ── Founder circle — self-pins internally ─────────────────────────── */}
       <div style={{ position: "relative", zIndex: 17 }}>
         <FounderCircleSection imageSrc="/images/3womenredback.png" />
       </div>
 
-      {/* ── Footer — simple fade-in ────────────────────────────────────────── */}
-      <ScrollFadeSection zIndex={18}>
+      {/* ── Footer ────────────────────────────────────────────────────────── */}
+      <div style={{ position: "relative", zIndex: 18 }}>
         <Footer />
-      </ScrollFadeSection>
+      </div>
     </main>
   );
 }
