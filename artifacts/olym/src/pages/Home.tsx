@@ -27,9 +27,23 @@ export default function Home() {
   };
 
   useEffect(() => {
-    console.log("%cOLYM scroll fix v1", "color:#C6A46A;font-weight:bold;font-size:14px");
+    // First refresh after ~400ms — catches early layout shifts from fonts/images.
+    // Second refresh on window.load — catches anything that settles later
+    // (large images, web fonts, video metadata). Using readyState guard so we
+    // don't miss the event if it already fired before React mounted.
     const id = setTimeout(() => ScrollTrigger.refresh(), 400);
-    return () => clearTimeout(id);
+
+    const onLoad = () => ScrollTrigger.refresh();
+    if (document.readyState === "complete") {
+      onLoad();
+    } else {
+      window.addEventListener("load", onLoad, { once: true });
+    }
+
+    return () => {
+      clearTimeout(id);
+      window.removeEventListener("load", onLoad);
+    };
   }, []);
 
   return (

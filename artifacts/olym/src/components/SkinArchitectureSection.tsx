@@ -67,6 +67,7 @@ export default function SkinArchitectureSection() {
           scrub: 1.35,
           pin: true,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 

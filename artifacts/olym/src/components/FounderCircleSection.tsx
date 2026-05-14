@@ -41,6 +41,7 @@ export default function FounderCircleSection({
           scrub: 1.5,
           pin: true,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
         },
       });
 
@@ -64,9 +65,8 @@ export default function FounderCircleSection({
       }
 
       return () => {
-        ScrollTrigger.getAll().forEach((t) => {
-          if (t.vars.trigger === section) t.kill();
-        });
+        tl.scrollTrigger?.kill();
+        tl.kill();
       };
     });
 

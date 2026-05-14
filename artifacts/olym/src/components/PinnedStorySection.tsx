@@ -47,6 +47,7 @@ export default function PinnedStorySection({
         },
       });
 
+
       if (overlayRef.current) {
         tl.fromTo(
           overlayRef.current,

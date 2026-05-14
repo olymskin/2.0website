@@ -10,32 +10,43 @@ export default function Header() {
     const header = headerRef.current;
     if (!header) return;
 
+    // RAF throttle: at most one tween created per animation frame,
+    // preventing animation churn when scroll events fire at 60fps.
+    let rafId: number | null = null;
+
     const handleScroll = () => {
-      const currentY = window.scrollY;
-      const diff = currentY - lastScrollY.current;
+      if (rafId !== null) return;
+      rafId = requestAnimationFrame(() => {
+        rafId = null;
+        const currentY = window.scrollY;
+        const diff = currentY - lastScrollY.current;
 
-      if (tween.current) tween.current.kill();
+        if (tween.current) tween.current.kill();
 
-      if (diff > 0 && currentY > 80) {
-        tween.current = gsap.to(header, {
-          autoAlpha: 0,
-          y: -20,
-          duration: 0.5,
-          ease: "power2.inOut",
-        });
-      } else {
-        tween.current = gsap.to(header, {
-          autoAlpha: 1,
-          y: 0,
-          duration: 0.5,
-          ease: "power2.inOut",
-        });
-      }
-      lastScrollY.current = currentY;
+        if (diff > 0 && currentY > 80) {
+          tween.current = gsap.to(header, {
+            autoAlpha: 0,
+            y: -20,
+            duration: 0.5,
+            ease: "power2.inOut",
+          });
+        } else {
+          tween.current = gsap.to(header, {
+            autoAlpha: 1,
+            y: 0,
+            duration: 0.5,
+            ease: "power2.inOut",
+          });
+        }
+        lastScrollY.current = currentY;
+      });
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (rafId !== null) cancelAnimationFrame(rafId);
+    };
   }, []);
 
   return (

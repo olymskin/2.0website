@@ -55,6 +55,7 @@ export default function ScrollFadeSection({
         start: "top 92%",
         end: "top 18%",
         scrub: 1.6,
+        invalidateOnRefresh: true,
       },
     });
 
