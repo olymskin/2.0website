@@ -4,317 +4,315 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-const facts = [
-  [
-    "VISIBLE DEHYDRATION",
-    "On deeper skin, even slight dehydration creates micro texture appearing as ashiness, dullness, and uneven tone.",
-  ],
-  [
-    "BARRIER REACTIVITY",
-    "Friction, shaving, and environmental stress can make barrier disruption more visible on melanated skin.",
-  ],
-  [
-    "IMPROPER FORMULATIONS",
-    "Heavy formulas sit. Lighter formulas fade. Neither sustains hydration in a way that preserves appearance.",
-  ],
-  [
-    "FRICTION SENSITIVITY",
-    "Elbows, knees, and inner thighs are more prone to pigment imbalance and need hydration without buildup or residue.",
-  ],
+const scenes = [
+  {
+    eyebrow: "THE BIOLOGY OF MELANATED SKIN",
+    phrases: ["What shows on the surface", "starts deeper."],
+    explanation: "",
+    align: "center",
+  },
+  {
+    eyebrow: "VISIBLE DEHYDRATION",
+    phrases: ["Visible.", "Earlier.", "Longer."],
+    explanation:
+      "On deeper skin, even slight dehydration can create micro texture that reads as ashiness, dullness, and uneven tone.",
+    align: "left",
+  },
+  {
+    eyebrow: "BARRIER REACTIVITY",
+    phrases: ["Friction.", "Shaving.", "Environmental stress."],
+    explanation:
+      "When the barrier is disrupted, the visible result can appear more pronounced on melanated skin.",
+    align: "right",
+  },
+  {
+    eyebrow: "IMPROPER FORMULATIONS",
+    phrases: ["Heavy formulas sit.", "Lighter formulas fade.", "Neither lasts."],
+    explanation:
+      "Hydration has to be sustained without buildup, residue, or a finish that disappears too quickly.",
+    align: "center",
+  },
+  {
+    eyebrow: "FRICTION SENSITIVITY",
+    phrases: ["Elbows.", "Knees.", "Inner thighs."],
+    explanation:
+      "High-friction areas need comfort, moisture, and softness without a heavy film.",
+    align: "left",
+  },
+  {
+    eyebrow: "OLYM SKIN BEGINS THERE",
+    phrases: ["This is why body care", "has to be designed differently."],
+    explanation: "",
+    align: "center",
+  },
 ];
 
 export default function SkinArchitectureSection() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const headingRef = useRef<HTMLDivElement | null>(null);
-  const videoWrapRef = useRef<HTMLDivElement | null>(null);
-  const factRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const outerRef = useRef<HTMLDivElement>(null);
+  const pinRef = useRef<HTMLDivElement>(null);
+  const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const bgRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const pathRef = useRef<SVGPathElement>(null);
 
   useEffect(() => {
-    const section = sectionRef.current;
-    const heading = headingRef.current;
-    const videoWrap = videoWrapRef.current;
-
-    if (!section || !heading || !videoWrap) return;
+    const outer = outerRef.current;
+    const pin = pinRef.current;
+    if (!outer || !pin) return;
 
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      gsap.set(heading, {
-        opacity: 0,
-        y: 28,
-      });
+      // autoAlpha: 0 sets both opacity:0 AND visibility:hidden so hidden scenes
+      // are fully removed from hit-testing and don't bleed through.
+      gsap.set(sceneRefs.current, { autoAlpha: 0, y: 32 });
+      gsap.set(bgRefs.current, { opacity: 0 });
+      gsap.set(bgRefs.current[0], { opacity: 1 });
 
-      gsap.set(videoWrap, {
-        scale: 0.68,
-        y: 50,
-        rotateX: 2,
-        transformOrigin: "center center",
-      });
+      const path = pathRef.current;
+      let pathLength = 0;
 
-      factRefs.current.forEach((fact) => {
-        if (!fact) return;
-
-        gsap.set(fact, { opacity: 0, y: 18 });
-        gsap.set(fact.querySelector(".skin-callout-dot"), { scale: 0 });
-        gsap.set(fact.querySelector(".skin-callout-line"), { scaleX: 0 });
-      });
+      if (path) {
+        pathLength = path.getTotalLength();
+        gsap.set(path, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: pathLength,
+        });
+      }
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: section,
+          trigger: outer,
           start: "top top",
-          end: "+=4200",
+          end: "bottom bottom",
           scrub: 1.35,
-          pin: true,
+          pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
 
-      tl.to(heading, {
-        opacity: 1,
-        y: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      });
-
-      tl.to(
-        videoWrap,
-        {
-          scale: 0.95,
-          y: 0,
-          rotateX: 0,
-          duration: 1.2,
-          ease: "power2.out",
-        },
-        "<0.15"
-      );
-
-      tl.to(videoWrap, {
-        scale: 1.05,
-        y: -26,
-        duration: 0.8,
-        ease: "sine.inOut",
-      });
-
-      facts.forEach((_, i) => {
-        const fact = factRefs.current[i];
-        if (!fact) return;
-
+      if (path) {
         tl.to(
-          videoWrap,
+          path,
           {
-            scale: 1.05 + i * 0.025,
-            y: -26 - i * 8,
-            rotateZ: i % 2 === 0 ? 0.35 : -0.35,
-            duration: 0.75,
-            ease: "sine.inOut",
+            strokeDashoffset: 0,
+            duration: scenes.length * 1.2,
+            ease: "none",
           },
-          "+=0.1"
+          0
         );
+      }
 
-        tl.to(fact, { opacity: 1, y: 0, duration: 0.35 }, "<");
+      scenes.forEach((_, i) => {
+        const scene = sceneRefs.current[i];
+        const bg = bgRefs.current[i];
+        const prevScene = sceneRefs.current[i - 1];
 
+        if (!scene) return;
+
+        const start = i * 2;
+
+        // Fade background in for this scene
+        if (bg) {
+          tl.to(
+            bg,
+            { opacity: 1, duration: 0.7, ease: "power1.inOut" },
+            start
+          );
+        }
+
+        // Fade previous scene out just before this one enters —
+        // ensures only ONE scene is ever visible at a time.
+        if (prevScene) {
+          tl.to(
+            prevScene,
+            { autoAlpha: 0, y: -24, duration: 0.35, ease: "power2.inOut" },
+            start - 0.15
+          );
+        }
+
+        // Reveal this scene
         tl.to(
-          fact.querySelector(".skin-callout-dot"),
-          { scale: 1, duration: 0.22, ease: "back.out(2)" },
-          "<"
+          scene,
+          { autoAlpha: 1, y: 0, duration: 0.55, ease: "power2.out" },
+          start
         );
 
-        tl.to(
-          fact.querySelector(".skin-callout-line"),
-          { scaleX: 1, duration: 0.45, ease: "power2.out" },
-          "<0.08"
-        );
+        // Hold
+        tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.85, ease: "none" });
 
-        tl.to(fact, { opacity: 0, y: -12, duration: 0.35 }, "+=0.8");
+        // Fade out (all but the final scene)
+        if (i !== scenes.length - 1) {
+          tl.to(scene, {
+            autoAlpha: 0,
+            y: -24,
+            duration: 0.45,
+            ease: "power2.inOut",
+          });
+        }
       });
 
-      tl.to(videoWrap, {
-        scale: 1,
-        y: -20,
-        rotateZ: 0,
-        duration: 0.6,
-        ease: "power2.out",
-      });
+      return () => {
+        tl.scrollTrigger?.kill();
+        tl.kill();
+      };
+    });
+
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.set(sceneRefs.current, { autoAlpha: 1, y: 0 });
+      gsap.set(bgRefs.current, { opacity: 1 });
     });
 
     return () => mm.revert();
   }, []);
 
+  const sectionHeight = `${scenes.length * 155}vh`;
+
   return (
     <section
-      ref={sectionRef}
-      id="skin-architecture"
+      ref={outerRef}
       style={{
         position: "relative",
-        height: "100dvh",
-        minHeight: "680px",
-        width: "100%",
-        overflow: "hidden",
-        background: "#140003",
-        color: "#F4EFE9",
+        height: sectionHeight,
+        background: "#0A0A0A",
       }}
     >
       <div
+        ref={pinRef}
         style={{
-          position: "absolute",
-          inset: 0,
-          zIndex: 1,
-          background:
-            "radial-gradient(circle at 50% 58%, rgba(120,20,30,0.22), rgba(20,0,3,0.08) 58%, rgba(10,10,10,0.12) 100%)",
-          pointerEvents: "none",
-        }}
-      />
-
-      <div
-        ref={headingRef}
-        style={{
-          position: "absolute",
-          top: "clamp(5rem, 8vh, 7rem)",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 6,
-          width: "min(88vw, 900px)",
-          textAlign: "center",
-          pointerEvents: "none",
+          position: "relative",
+          height: "100dvh",
+          minHeight: "600px",
+          overflow: "hidden",
+          background: "#0A0A0A",
         }}
       >
-        <h2
-          style={{
-            margin: 0,
-            fontFamily: "'Cormorant Garamond', Georgia, serif",
-            fontSize: "clamp(1.6rem, 4vw, 3rem)",
-            fontWeight: 300,
-            letterSpacing: "0.06em",
-            color: "#F4EFE9",
-            fontStyle: "bold",
-          }}
-        >
-          The Biology of Melanated Skin
-        </h2>
-      </div>
-
-      <div
-        ref={videoWrapRef}
-        style={{
-          position: "absolute",
-          left: "50%",
-          top: "50%",
-          zIndex: 2,
-          /* Mobile: ~300px (80vw at 375px). Tablet: ~55vw. Desktop: capped at 580px.
-             Down from 980px — gives the visualization room to breathe on wide screens. */
-          width: "clamp(280px, 55vw, 580px)",
-          transform: "translate(-50%, -50%)",
-          perspective: "1200px",
-          willChange: "transform",
-        }}
-      >
-        <video
-          src="/skin/skinlayers.mp4"
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="auto"
-          style={{
-            width: "100%",
-            height: "auto",
-            display: "block",
-            borderRadius: "0px",
-            pointerEvents: "none",
-            userSelect: "none",
-            mixBlendMode: "lighten",
-            opacity: 0.88,
-            WebkitMaskImage:
-              "radial-gradient(ellipse at center, black 50%, rgba(0,0,0,0.78) 64%, rgba(0,0,0,0.32) 82%, transparent 100%)",
-            maskImage:
-              "radial-gradient(ellipse at center, black 50%, rgba(0,0,0,0.78) 64%, rgba(0,0,0,0.32) 82%, transparent 100%)",
-            filter:
-              "drop-shadow(0 55px 110px rgba(0,0,0,0.62)) saturate(1.08) contrast(1.03)",
-          }}
-        />
-      </div>
-
-      <div
-        style={{
-          position: "absolute",
-          left: "clamp(1.25rem, 7vw, 7rem)",
-          bottom: "clamp(3rem, 12vh, 8rem)",
-          zIndex: 5,
-          width: "min(84vw, 430px)",
-        }}
-      >
-        {facts.map(([title, body], i) => (
+        {scenes.map((_, i) => (
           <div
-            key={title}
+            key={i}
             ref={(el) => {
-              factRefs.current[i] = el;
+              bgRefs.current[i] = el;
             }}
             style={{
               position: "absolute",
-              left: 0,
-              bottom: 0,
-              width: "100%",
+              inset: 0,
+              opacity: 0,
+              background:
+                i % 2 === 0
+                  ? "radial-gradient(circle at 50% 30%, rgba(198,164,106,0.18), transparent 32%), linear-gradient(135deg, #0A0A0A 0%, #3B070A 100%)"
+                  : "radial-gradient(circle at 70% 45%, rgba(244,239,233,0.10), transparent 35%), linear-gradient(135deg, #120204 0%, #3B070A 65%, #0A0A0A 100%)",
             }}
-          >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                marginBottom: "1rem",
-              }}
-            >
-              <span
-                className="skin-callout-dot"
-                style={{
-                  width: 7,
-                  height: 7,
-                  display: "block",
-                  background: "#D6B56D",
-                  boxShadow: "0 0 18px rgba(214,181,109,0.7)",
-                }}
-              />
-
-              <span
-                className="skin-callout-line"
-                style={{
-                  width: "150px",
-                  height: 1,
-                  display: "block",
-                  background:
-                    "linear-gradient(90deg, #D6B56D, rgba(214,181,109,0))",
-                  transformOrigin: "left center",
-                }}
-              />
-            </div>
-
-            <h3
-              style={{
-                margin: 0,
-                fontFamily: "Inter, system-ui, sans-serif",
-                fontSize: "clamp(0.72rem, 1vw, 0.9rem)",
-                letterSpacing: "0.18em",
-                fontWeight: 600,
-                color: "#F4EFE9",
-              }}
-            >
-              {title}
-            </h3>
-
-            <p
-              style={{
-                margin: "0.7rem 0 0",
-                fontFamily: "Inter, system-ui, sans-serif",
-                fontSize: "clamp(0.88rem, 1.15vw, 1rem)",
-                lineHeight: 1.55,
-                color: "rgba(244,239,233,0.76)",
-              }}
-            >
-              {body}
-            </p>
-          </div>
+          />
         ))}
+
+        <svg
+          viewBox="0 0 390 844"
+          preserveAspectRatio="none"
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            zIndex: 2,
+            pointerEvents: "none",
+            opacity: 0.55,
+          }}
+        >
+          <path
+            ref={pathRef}
+            d="M210 40 C120 180 285 260 165 390 C70 500 280 570 190 790"
+            fill="none"
+            stroke="#C6A46A"
+            strokeWidth="1.2"
+            strokeLinecap="round"
+          />
+        </svg>
+
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            zIndex: 3,
+            background:
+              "linear-gradient(180deg, rgba(10,10,10,0.25), rgba(10,10,10,0.55))",
+          }}
+        />
+
+        {scenes.map((scene, i) => {
+          const isCenter = scene.align === "center";
+          const isRight = scene.align === "right";
+
+          return (
+            <div
+              key={i}
+              ref={(el) => {
+                sceneRefs.current[i] = el;
+              }}
+              style={{
+                position: "absolute",
+                zIndex: 10,
+                top: isCenter ? "50%" : i === 4 ? "58%" : "50%",
+                left: isRight ? "auto" : isCenter ? "50%" : "1.5rem",
+                right: isRight ? "1.5rem" : "auto",
+                transform: isCenter ? "translate(-50%, -50%)" : "translateY(-50%)",
+                width: "min(88vw, 760px)",
+                textAlign: isCenter ? "center" : isRight ? "right" : "left",
+                opacity: 0,
+              }}
+            >
+              <p
+                style={{
+                  margin: "0 0 1.1rem",
+                  fontFamily: "'Inter', sans-serif",
+                  fontSize: "clamp(0.68rem, 2.5vw, 0.85rem)",
+                  letterSpacing: "0.18em",
+                  textTransform: "uppercase",
+                  color: "#C6A46A",
+                }}
+              >
+                {scene.eyebrow}
+              </p>
+
+              {scene.phrases.map((phrase, phraseIndex) => (
+                <h2
+                  key={phrase}
+                  style={{
+                    margin: 0,
+                    fontFamily: "'Cormorant Garamond', Georgia, serif",
+                    fontSize: "clamp(2.15rem, 10.5vw, 6.4rem)",
+                    fontWeight: 300,
+                    lineHeight: 0.96,
+                    letterSpacing: "-0.03em",
+                    color: "#F4EFE9",
+                    fontStyle:
+                      phraseIndex === scene.phrases.length - 1 && i !== 1
+                        ? "italic"
+                        : "normal",
+                  }}
+                >
+                  {phrase}
+                </h2>
+              ))}
+
+              {scene.explanation && (
+                <p
+                  style={{
+                    margin: "1.4rem 0 0",
+                    marginLeft: isRight ? "auto" : isCenter ? "auto" : 0,
+                    marginRight: isCenter ? "auto" : 0,
+                    maxWidth: "540px",
+                    fontFamily: "'Inter', sans-serif",
+                    fontSize: "clamp(0.95rem, 3.4vw, 1.15rem)",
+                    lineHeight: 1.65,
+                    color: "rgba(244,239,233,0.82)",
+                  }}
+                >
+                  {scene.explanation}
+                </p>
+              )}
+            </div>
+          );
+        })}
       </div>
     </section>
   );
