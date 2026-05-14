@@ -30,7 +30,7 @@ interface Props {
   oneAtATime?: boolean;
 }
 
-export default function StorySequence({ panels, vhPerLine = 58, oneAtATime = false }: Props) {
+export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = false }: Props) {
   const sequenceRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
 

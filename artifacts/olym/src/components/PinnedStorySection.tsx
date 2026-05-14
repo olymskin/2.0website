@@ -19,6 +19,7 @@ export default function PinnedStorySection({
   imagePosition = "center",
   testId = "section-pinned-story",
 }: PinnedStorySectionProps) {
+  const outerRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -26,9 +27,12 @@ export default function PinnedStorySection({
   const FALLBACK =
     "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop";
 
+  const outerHeight = `${lines.length * 70 + 100}vh`;
+
   useEffect(() => {
+    const outer = outerRef.current;
     const section = sectionRef.current;
-    if (!section) return;
+    if (!outer || !section) return;
 
     const mm = gsap.matchMedia();
 
@@ -37,16 +41,16 @@ export default function PinnedStorySection({
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: section,
+          trigger: outer,
           start: "top top",
-          end: `+=${lines.length * 420}`,
+          end: "bottom bottom",
           scrub: 1.6,
-          pin: true,
+          pin: section,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          pinSpacing: false,
         },
       });
-
 
       if (overlayRef.current) {
         tl.fromTo(
@@ -98,87 +102,92 @@ export default function PinnedStorySection({
   }, [lines.length]);
 
   return (
-    <section
-      ref={sectionRef}
-      id={id}
-      data-testid={testId}
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100dvh",
-        minHeight: "600px",
-        overflow: "hidden",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
+    <div
+      ref={outerRef}
+      style={{ position: "relative", height: outerHeight }}
     >
-      {/* Single stable background image */}
-      <div
-        style={{
-          position: "absolute",
-          inset: 0,
-          backgroundImage: `url(${imageSrc || FALLBACK})`,
-          backgroundSize: "cover",
-          backgroundPosition: imagePosition,
-          backgroundRepeat: "no-repeat",
-        }}
-      />
-
-      {/* Dark gradient overlay */}
-      <div
-        ref={overlayRef}
-        style={{
-          position: "absolute",
-          inset: 0,
-          background:
-            "linear-gradient(135deg, rgba(10,10,10,0.74) 0%, rgba(59,10,15,0.42) 100%)",
-          zIndex: 1,
-        }}
-      />
-
-      {/* Text lines */}
-      <div
+      <section
+        ref={sectionRef}
+        id={id}
+        data-testid={testId}
         style={{
           position: "relative",
-          zIndex: 10,
-          textAlign: "center",
-          padding: "0 1.5rem",
-          maxWidth: "980px",
+          width: "100%",
+          height: "100dvh",
+          minHeight: "600px",
+          overflow: "hidden",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
-        {lines.map((line, i) => (
-          <div
-            key={i}
-            style={{
-              display: "block",
-              overflow: "visible",
-              marginBottom: i < lines.length - 1 ? "0.8rem" : 0,
-            }}
-          >
-            <span
-              ref={(el) => {
-                lineRefs.current[i] = el;
-              }}
-              data-testid={`text-story-line-${i}`}
+        {/* Single stable background image */}
+        <div
+          style={{
+            position: "absolute",
+            inset: 0,
+            backgroundImage: `url(${imageSrc || FALLBACK})`,
+            backgroundSize: "cover",
+            backgroundPosition: imagePosition,
+            backgroundRepeat: "no-repeat",
+          }}
+        />
+
+        {/* Dark gradient overlay */}
+        <div
+          ref={overlayRef}
+          style={{
+            position: "absolute",
+            inset: 0,
+            background:
+              "linear-gradient(135deg, rgba(10,10,10,0.74) 0%, rgba(59,10,15,0.42) 100%)",
+            zIndex: 1,
+          }}
+        />
+
+        {/* Text lines */}
+        <div
+          style={{
+            position: "relative",
+            zIndex: 10,
+            textAlign: "center",
+            padding: "0 1.5rem",
+            maxWidth: "980px",
+          }}
+        >
+          {lines.map((line, i) => (
+            <div
+              key={i}
               style={{
                 display: "block",
-                fontFamily: "'Cormorant Garamond', Georgia, serif",
-                fontSize: "clamp(2rem, 5.5vw, 5rem)",
-                fontWeight: 300,
-                lineHeight: 1.12,
-                letterSpacing: "0.01em",
-                color: "#F4EFE9",
-                opacity: 0,
-                fontStyle: i % 2 === 0 ? "normal" : "italic",
-                willChange: "opacity, transform",
+                overflow: "visible",
+                marginBottom: i < lines.length - 1 ? "0.8rem" : 0,
               }}
             >
-              {line}
-            </span>
-          </div>
-        ))}
-      </div>
-    </section>
+              <span
+                ref={(el) => {
+                  lineRefs.current[i] = el;
+                }}
+                data-testid={`text-story-line-${i}`}
+                style={{
+                  display: "block",
+                  fontFamily: "'Cormorant Garamond', Georgia, serif",
+                  fontSize: "clamp(2rem, 5.5vw, 5rem)",
+                  fontWeight: 300,
+                  lineHeight: 1.12,
+                  letterSpacing: "0.01em",
+                  color: "#F4EFE9",
+                  opacity: 0,
+                  fontStyle: i % 2 === 0 ? "normal" : "italic",
+                  willChange: "opacity, transform",
+                }}
+              >
+                {line}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }

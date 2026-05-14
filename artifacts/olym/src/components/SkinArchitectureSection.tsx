@@ -88,6 +88,7 @@ export default function SkinArchitectureSection() {
           pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          pinSpacing: false,
         },
       });
 
