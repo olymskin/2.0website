@@ -47,12 +47,28 @@ const scenes = [
   },
 ];
 
+const isMobileBreakpoint =
+  typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+
+const isWebview =
+  typeof navigator !== "undefined" &&
+  /Instagram|FBAN|FBAV|Twitter|LinkedInApp/i.test(navigator.userAgent);
+
+// Mobile: shorter scroll distance per scene; webview gets the most conservative value
+const DESKTOP_VH_PER_SCENE = 155;
+const MOBILE_VH_PER_SCENE = isWebview ? 90 : 105;
+const DESKTOP_SCRUB = 1.35;
+const MOBILE_SCRUB = isWebview ? 0.7 : 0.9;
+
 export default function SkinArchitectureSection() {
   const outerRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
   const sceneRefs = useRef<(HTMLDivElement | null)[]>([]);
   const bgRefs = useRef<(HTMLDivElement | null)[]>([]);
   const pathRef = useRef<SVGPathElement>(null);
+
+  const vhPerScene = isMobileBreakpoint ? MOBILE_VH_PER_SCENE : DESKTOP_VH_PER_SCENE;
+  const scrub = isMobileBreakpoint ? MOBILE_SCRUB : DESKTOP_SCRUB;
 
   useEffect(() => {
     const outer = outerRef.current;
@@ -62,8 +78,6 @@ export default function SkinArchitectureSection() {
     const mm = gsap.matchMedia();
 
     mm.add("(prefers-reduced-motion: no-preference)", () => {
-      // autoAlpha: 0 sets both opacity:0 AND visibility:hidden so hidden scenes
-      // are fully removed from hit-testing and don't bleed through.
       gsap.set(sceneRefs.current, { autoAlpha: 0, y: 32 });
       gsap.set(bgRefs.current, { opacity: 0 });
       gsap.set(bgRefs.current[0], { opacity: 1 });
@@ -84,7 +98,7 @@ export default function SkinArchitectureSection() {
           trigger: outer,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.35,
+          scrub,
           pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -92,8 +106,6 @@ export default function SkinArchitectureSection() {
         },
       });
 
-      // Path draws in segments — one segment per scene, in sync with each reveal.
-      // No global path animation; the line guides the reader through each beat.
       const totalScenes = scenes.length;
 
       scenes.forEach((_, i) => {
@@ -102,25 +114,20 @@ export default function SkinArchitectureSection() {
 
         if (!scene) return;
 
-        // How far the path should be drawn by the end of this scene's reveal
         const nextOffset = pathLength - pathLength * ((i + 1) / totalScenes);
 
-        // Crossfade backgrounds: fade all out, then fade this one in
         if (bg) {
           tl.to(bgRefs.current, { opacity: 0, duration: 0.35, ease: "power1.inOut" });
           tl.to(bg, { opacity: 1, duration: 0.55, ease: "power1.inOut" }, "<");
         }
 
-        // 1. Fade scene in — path draws in sync
         tl.to(scene, { autoAlpha: 1, y: 0, duration: 0.65, ease: "power2.out" });
         if (path) {
           tl.to(path, { strokeDashoffset: nextOffset, duration: 0.65, ease: "power1.inOut" }, "<");
         }
 
-        // 2. Hold
         tl.to(scene, { autoAlpha: 1, y: 0, duration: 1.35, ease: "none" });
 
-        // 3. Fade out before next scene (not on the last scene)
         if (i !== scenes.length - 1) {
           tl.to(scene, { autoAlpha: 0, y: -24, duration: 0.55, ease: "power2.inOut" });
         }
@@ -138,13 +145,14 @@ export default function SkinArchitectureSection() {
     });
 
     return () => mm.revert();
-  }, []);
+  }, [scrub]);
 
-  const sectionHeight = `${scenes.length * 155}vh`;
+  const sectionHeight = `${scenes.length * vhPerScene}vh`;
 
   return (
     <section
       ref={outerRef}
+      id="skin-architecture"
       style={{
         position: "relative",
         height: sectionHeight,
@@ -232,6 +240,7 @@ export default function SkinArchitectureSection() {
                 width: "min(88vw, 760px)",
                 textAlign: isCenter ? "center" : isRight ? "right" : "left",
                 opacity: 0,
+                willChange: "opacity, transform",
               }}
             >
               <p

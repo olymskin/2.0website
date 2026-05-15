@@ -14,15 +14,28 @@ interface FounderCircleSectionProps {
   imageSrc?: string;
 }
 
-export default function FounderCircleSection({
-  imageSrc,
-}: FounderCircleSectionProps) {
+const isMobileBreakpoint =
+  typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+
+const isWebview =
+  typeof navigator !== "undefined" &&
+  /Instagram|FBAN|FBAV|Twitter|LinkedInApp/i.test(navigator.userAgent);
+
+const PX_PER_LINE_DESKTOP = 260;
+const PX_PER_LINE_MOBILE = isWebview ? 160 : 190;
+const SCRUB_DESKTOP = 1.5;
+const SCRUB_MOBILE = isWebview ? 0.6 : 0.8;
+
+const PLACEHOLDER =
+  "https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1080&q=78&fit=crop";
+
+export default function FounderCircleSection({ imageSrc }: FounderCircleSectionProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const buttonRef = useRef<HTMLAnchorElement | null>(null);
 
-  const placeholder =
-    "https://images.unsplash.com/photo-1629109553059-a2e26b58f0b7?w=1920&q=80&fit=crop";
+  const pxPerLine = isMobileBreakpoint ? PX_PER_LINE_MOBILE : PX_PER_LINE_DESKTOP;
+  const scrub = isMobileBreakpoint ? SCRUB_MOBILE : SCRUB_DESKTOP;
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -35,8 +48,8 @@ export default function FounderCircleSection({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: `+=${LINES.length * 260}`,
-          scrub: 1.5,
+          end: `+=${LINES.length * pxPerLine}`,
+          scrub,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -69,7 +82,7 @@ export default function FounderCircleSection({
     });
 
     return () => matchMedia.revert();
-  }, []);
+  }, [pxPerLine, scrub]);
 
   return (
     <section
@@ -87,14 +100,22 @@ export default function FounderCircleSection({
         justifyContent: "center",
       }}
     >
-      <div
+      {/* Background image — <img> so onLoad fires for ScrollTrigger.refresh() */}
+      <img
+        src={imageSrc || PLACEHOLDER}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        onLoad={() => ScrollTrigger.refresh()}
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `url(${imageSrc || placeholder})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          display: "block",
         }}
       />
 
@@ -104,6 +125,7 @@ export default function FounderCircleSection({
           inset: 0,
           background:
             "linear-gradient(135deg, rgba(10,10,10,0.82) 0%, rgba(74,11,18,0.55) 100%)",
+          zIndex: 1,
         }}
       />
 
@@ -145,6 +167,7 @@ export default function FounderCircleSection({
                 opacity: 0,
                 fontStyle: isStatement ? "italic" : "normal",
                 textTransform: isStatement ? "none" : "uppercase",
+                willChange: "opacity, transform",
               }}
             >
               {line}
@@ -167,6 +190,7 @@ export default function FounderCircleSection({
             padding: "1rem 3rem",
             marginTop: "2rem",
             opacity: 0,
+            willChange: "opacity, transform",
           }}
         >
           Apply for access

@@ -12,6 +12,21 @@ interface PinnedStorySectionProps {
   testId?: string;
 }
 
+const isMobileBreakpoint =
+  typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+
+const isWebview =
+  typeof navigator !== "undefined" &&
+  /Instagram|FBAN|FBAV|Twitter|LinkedInApp/i.test(navigator.userAgent);
+
+const PX_PER_LINE_DESKTOP = 280;
+const PX_PER_LINE_MOBILE = isWebview ? 160 : 190;
+const SCRUB_DESKTOP = 1.6;
+const SCRUB_MOBILE = isWebview ? 0.6 : 0.9;
+
+const FALLBACK =
+  "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1080&q=78&fit=crop";
+
 export default function PinnedStorySection({
   id,
   lines,
@@ -23,8 +38,8 @@ export default function PinnedStorySection({
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
 
-  const FALLBACK =
-    "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=1920&q=80&fit=crop";
+  const pxPerLine = isMobileBreakpoint ? PX_PER_LINE_MOBILE : PX_PER_LINE_DESKTOP;
+  const scrub = isMobileBreakpoint ? SCRUB_MOBILE : SCRUB_DESKTOP;
 
   useEffect(() => {
     const section = sectionRef.current;
@@ -39,8 +54,8 @@ export default function PinnedStorySection({
         scrollTrigger: {
           trigger: section,
           start: "top top",
-          end: `+=${lines.length * 280}`,
-          scrub: 1.6,
+          end: `+=${lines.length * pxPerLine}`,
+          scrub,
           pin: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -59,27 +74,11 @@ export default function PinnedStorySection({
       lineRefs.current.forEach((line, index) => {
         if (!line) return;
 
-        tl.to(line, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "power2.out",
-        });
-
-        tl.to(line, {
-          opacity: 1,
-          y: 0,
-          duration: 0.45,
-          ease: "none",
-        });
+        tl.to(line, { opacity: 1, y: 0, duration: 0.7, ease: "power2.out" });
+        tl.to(line, { opacity: 1, y: 0, duration: 0.45, ease: "none" });
 
         if (index !== lineRefs.current.length - 1) {
-          tl.to(line, {
-            opacity: 0.28,
-            y: -18,
-            duration: 0.55,
-            ease: "power2.inOut",
-          });
+          tl.to(line, { opacity: 0.28, y: -18, duration: 0.55, ease: "power2.inOut" });
         }
       });
 
@@ -94,7 +93,7 @@ export default function PinnedStorySection({
     });
 
     return () => mm.revert();
-  }, [lines.length]);
+  }, [lines.length, pxPerLine, scrub]);
 
   return (
     <section
@@ -112,14 +111,22 @@ export default function PinnedStorySection({
         justifyContent: "center",
       }}
     >
-      <div
+      {/* Background image — <img> so onLoad fires for ScrollTrigger.refresh() */}
+      <img
+        src={imageSrc || FALLBACK}
+        alt=""
+        aria-hidden="true"
+        loading="lazy"
+        decoding="async"
+        onLoad={() => ScrollTrigger.refresh()}
         style={{
           position: "absolute",
           inset: 0,
-          backgroundImage: `url(${imageSrc || FALLBACK})`,
-          backgroundSize: "cover",
-          backgroundPosition: imagePosition,
-          backgroundRepeat: "no-repeat",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: imagePosition,
+          display: "block",
         }}
       />
 

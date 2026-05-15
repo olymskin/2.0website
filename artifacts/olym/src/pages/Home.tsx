@@ -64,8 +64,8 @@ export default function Home() {
                 "Most body care treats dryness like a surface issue.",
                 "Melanated skin requires deeper design.",
               ],
-              imageSrc: "/images/neck.png",
-              desktopImageSrc: "/desktop/desktopimage1.png",
+              imageSrc: "/images/neck.webp",
+              desktopImageSrc: "/desktop/desktopimage1.webp",
               imagePosition: "center",
               mobileImagePosition: "center 35%",
             },
@@ -76,8 +76,8 @@ export default function Home() {
                 "Without compromise.",
                 "Without waiting for the industry to catch up.",
               ],
-              imageSrc: "/images/sideboob.png",
-              desktopImageSrc: "/desktop/desktopimage2.png",
+              imageSrc: "/images/sideboob.webp",
+              desktopImageSrc: "/desktop/desktopimage2.webp",
               imagePosition: "center 40%",
             },
           ]}
@@ -99,7 +99,7 @@ export default function Home() {
             "Private release. Available through access only.",
             "One treatment that does what others can't.",
           ]}
-          imageSrc="/images/cutesyphoto.png"
+          imageSrc="/images/cutesyphoto.webp"
           imagePosition="center 60%"
         />
       </div>
@@ -130,7 +130,7 @@ export default function Home() {
 
       {/* ── Founder circle — self-pins internally ─────────────────────────── */}
       <div style={{ position: "relative", zIndex: 17 }}>
-        <FounderCircleSection imageSrc="/images/3womenredback.png" />
+        <FounderCircleSection imageSrc="/images/3womenredback.webp" />
       </div>
 
       {/* ── Footer ────────────────────────────────────────────────────────── */}

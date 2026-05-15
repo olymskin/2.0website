@@ -18,8 +18,8 @@ export interface StoryPanel {
 interface Props {
   panels: StoryPanel[];
   /**
-   * Viewport-height units of scroll travel allocated per line.
-   * e.g. 58 means each story beat consumes 58vh of scroll distance.
+   * Viewport-height units of scroll travel allocated per line on desktop.
+   * Mobile always uses a reduced value (mobileVhPerLine) for performance.
    */
   vhPerLine?: number;
   /**
@@ -30,12 +30,24 @@ interface Props {
   oneAtATime?: boolean;
 }
 
+// Detected once at module level — stable across re-renders, no resize listener needed
+// (page must reload to change between mobile/desktop breakpoints in practice).
+const isMobileBreakpoint =
+  typeof window !== "undefined" && window.matchMedia("(max-width: 768px)").matches;
+
+// Instagram / Facebook in-app browser UA detection for extra-conservative tuning
+const isWebview =
+  typeof navigator !== "undefined" &&
+  /Instagram|FBAN|FBAV|Twitter|LinkedInApp/i.test(navigator.userAgent);
+
+const MOBILE_VH_PER_LINE = isWebview ? 26 : 30;
+const MOBILE_SCRUB = isWebview ? 0.6 : 0.8;
+const DESKTOP_SCRUB = 1.2;
+
 export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = false }: Props) {
   const sequenceRef = useRef<HTMLDivElement>(null);
   const pinRef = useRef<HTMLDivElement>(null);
 
-  // Resolve at first render so only the matching asset URL is ever injected
-  // into the style — the browser will never request the other file.
   const [isDesktop, setIsDesktop] = useState<boolean>(
     () => typeof window !== "undefined" && window.matchMedia("(min-width: 1024px)").matches
   );
@@ -46,6 +58,7 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
+
   const lineRefs = useRef<(HTMLSpanElement | null)[]>([]);
   const imageRefs = useRef<(HTMLDivElement | null)[]>([]);
   const overlayRef = useRef<HTMLDivElement>(null);
@@ -59,6 +72,10 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
     }))
   );
   const totalLines = allLines.length;
+
+  // Use reduced scroll distance on mobile for performance
+  const effectiveVhPerLine = isMobileBreakpoint ? MOBILE_VH_PER_LINE : vhPerLine;
+  const effectiveScrub = isMobileBreakpoint ? MOBILE_SCRUB : DESKTOP_SCRUB;
 
   useEffect(() => {
     const sequence = sequenceRef.current;
@@ -82,7 +99,7 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
           trigger: sequence,
           start: "top top",
           end: "bottom bottom",
-          scrub: 1.2,
+          scrub: effectiveScrub,
           pin: pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,
@@ -101,9 +118,6 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
       }
 
       // ── Animate each line and its matching image ─────────────────────────
-      // Each line gets 1 "unit" of timeline time.
-      // oneAtATime: previous lines fade fully to 0 for a clean one-at-a-time feel.
-      // Default: previous lines dim to 0.18 (faintly visible stack).
       const dimOpacity = oneAtATime ? 0 : 0.18;
       const dimY = oneAtATime ? 0 : -14;
 
@@ -118,14 +132,12 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
         const lineEl = lineRefs.current[i];
         if (!lineEl) return;
 
-        // Text fade in
         tl.to(
           lineEl,
           { opacity: 1, y: 0, duration: fadeIn, ease: "power2.out" },
           stageStart
         );
 
-        // Fade/dim previous line just before this one fades in
         if (i > 0) {
           const prev = lineRefs.current[i - 1];
           if (prev) {
@@ -137,7 +149,6 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
           }
         }
 
-        // Last line stays fully visible — no dim
         if (!isLastLine) {
           tl.to(
             lineEl,
@@ -146,7 +157,6 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
           );
         }
 
-        // Image crossfade: happens when the first line of a new panel enters
         if (i > 0 && isFirstInPanel) {
           const prevImg = imageRefs.current[panelIdx - 1];
           const nextImg = imageRefs.current[panelIdx];
@@ -185,11 +195,11 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
     });
 
     return () => mm.revert();
-  }, [totalLines, oneAtATime]);
+  }, [totalLines, oneAtATime, effectiveScrub]);
 
-  // Scroll container height: totalLines × vhPerLine gives the scroll travel,
+  // Outer scroll-container height: scroll travel = totalLines × vhPerLine,
   // plus 100vh so the pin ends exactly at the viewport bottom.
-  const seqHeight = `${totalLines * vhPerLine + 100}vh`;
+  const seqHeight = `${totalLines * effectiveVhPerLine + 100}vh`;
 
   return (
     <div
@@ -209,15 +219,6 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
           justifyContent: "center",
         }}
       >
-        {/* One background div per panel, stacked — crossfaded by GSAP.
-            Active image URL is chosen at render time so the browser never
-            fetches the non-matching asset.
-            backgroundColor fallback ensures the section is never solid black
-            while the background image is still loading.
-            <img> is used (instead of background-image) so we can fire
-            ScrollTrigger.refresh() on mobile after the first image loads —
-            background-image provides no onLoad hook. Desktop visuals are
-            identical: object-fit:cover matches background-size:cover. */}
         {panels.map((panel, i) => {
           const activeSrc =
             isDesktop && panel.desktopImageSrc
@@ -239,10 +240,12 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
                 src={activeSrc}
                 alt=""
                 aria-hidden="true"
+                loading={i === 0 ? "eager" : "lazy"}
+                decoding="async"
                 onLoad={
                   i === 0
                     ? () => {
-                        if (!isDesktop) ScrollTrigger.refresh();
+                        ScrollTrigger.refresh();
                       }
                     : undefined
                 }
@@ -275,10 +278,6 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
           }}
         />
 
-        {/* All text lines stacked in the centre.
-            maxHeight + overflow:hidden prevents stacked invisible lines from
-            pushing the flex container taller than the viewport on desktop,
-            which would cause the flex centering to push visible lines out of frame. */}
         <div
           style={{
             position: "relative",
@@ -313,7 +312,6 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
                   color: "#F4EFE9",
                   opacity: 0,
                   fontStyle: i % 2 === 0 ? "normal" : "italic",
-                  willChange: "opacity, transform",
                 }}
               >
                 {text}
