@@ -86,6 +86,7 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
           pin: pin,
           anticipatePin: 1,
           invalidateOnRefresh: true,
+          pinSpacing: false,
         },
       });
 
