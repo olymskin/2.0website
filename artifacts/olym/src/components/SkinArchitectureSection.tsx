@@ -155,8 +155,8 @@ export default function SkinArchitectureSection() {
         ref={pinRef}
         style={{
           position: "relative",
-          height: "100dvh",
-          minHeight: "600px",
+          height: "100vh",
+          minHeight: "100vh",
           overflow: "hidden",
           background: "#0A0A0A",
         }}

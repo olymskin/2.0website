@@ -200,8 +200,8 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
       <div
         ref={pinRef}
         style={{
-          height: "100dvh",
-          minHeight: "600px",
+          height: "100vh",
+          minHeight: "100vh",
           overflow: "hidden",
           position: "relative",
           display: "flex",
@@ -286,7 +286,7 @@ export default function StorySequence({ panels, vhPerLine = 44, oneAtATime = fal
             textAlign: "center",
             padding: "4vh 1.5rem",
             maxWidth: "980px",
-            maxHeight: "calc(100dvh - 4rem)",
+            maxHeight: "calc(100vh - 4rem)",
             overflow: "hidden",
           }}
         >
